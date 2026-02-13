@@ -11,6 +11,8 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
+
+	"backend/internal/database/sqlc"
 )
 
 // Service represents a service that interacts with a database.
@@ -22,10 +24,17 @@ type Service interface {
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
+
+	// WithTx runs fn inside a database transaction. On fn error the transaction is rolled back.
+	WithTx(ctx context.Context, fn func(sqlc.Querier) error) error
+
+	// Embed all sqlc-generated query methods.
+	sqlc.Querier
 }
 
 type service struct {
 	db *sql.DB
+	*sqlc.Queries
 }
 
 var (
@@ -49,7 +58,8 @@ func New() Service {
 		log.Fatal(err)
 	}
 	dbInstance = &service{
-		db: db,
+		db:      db,
+		Queries: sqlc.New(db),
 	}
 	return dbInstance
 }
@@ -112,4 +122,18 @@ func (s *service) Health() map[string]string {
 func (s *service) Close() error {
 	log.Printf("Disconnected from database: %s", database)
 	return s.db.Close()
+}
+
+func (s *service) WithTx(ctx context.Context, fn func(sqlc.Querier) error) error {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	qtx := s.Queries.WithTx(tx)
+	if err := fn(qtx); err != nil {
+		return err
+	}
+	return tx.Commit()
 }

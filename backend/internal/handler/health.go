@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"backend/internal/response"
 	"backend/internal/service"
-	"encoding/json"
 	"net/http"
 )
 
@@ -17,6 +17,5 @@ func NewHealthHandler(svc *service.HealthService) *HealthHandler {
 }
 
 func (h *HealthHandler) Check(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(h.svc.CheckDbHealth())
+	response.OK(w, r, h.svc.CheckDbHealth())
 }

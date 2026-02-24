@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"backend/internal/response"
 	"backend/internal/service"
-	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -21,7 +21,5 @@ func (h *UserHandler) Routes(r chi.Router) {
 }
 
 func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(struct {
-		Success bool `json:"success"`
-	}{Success: true})
+	response.OK(w, r, map[string]bool{"success": true})
 }

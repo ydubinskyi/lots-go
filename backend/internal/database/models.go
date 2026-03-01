@@ -5,10 +5,77 @@
 package database
 
 import (
+	"database/sql"
+	"database/sql/driver"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 )
+
+type LanguageCode string
+
+const (
+	LanguageCodeEn LanguageCode = "en"
+	LanguageCodePl LanguageCode = "pl"
+	LanguageCodeUk LanguageCode = "uk"
+)
+
+func (e *LanguageCode) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = LanguageCode(s)
+	case string:
+		*e = LanguageCode(s)
+	default:
+		return fmt.Errorf("unsupported scan type for LanguageCode: %T", src)
+	}
+	return nil
+}
+
+type NullLanguageCode struct {
+	LanguageCode LanguageCode
+	Valid        bool // Valid is true if LanguageCode is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullLanguageCode) Scan(value interface{}) error {
+	if value == nil {
+		ns.LanguageCode, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.LanguageCode.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullLanguageCode) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.LanguageCode), nil
+}
+
+type Category struct {
+	ID        uuid.UUID
+	ParentID  uuid.NullUUID
+	Depth     int32
+	SortOrder int32
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+}
+
+type CategoryTranslation struct {
+	ID           uuid.UUID
+	CategoryID   uuid.UUID
+	LanguageCode LanguageCode
+	Title        string
+	Slug         string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    sql.NullTime
+}
 
 type User struct {
 	ID             uuid.UUID

@@ -6,13 +6,15 @@ import (
 )
 
 type Services struct {
-	Health *HealthService
-	User   *UserService
+	Health   *HealthService
+	User     *UserService
+	Category *CategoryService
 }
 
 func NewServices(queries *database.Queries, db *sql.DB) *Services {
 	return &Services{
-		Health: NewHealthService(db),
-		User:   NewUserService(queries, db),
+		Health:   NewHealthService(db),
+		User:     NewUserService(queries, db),
+		Category: NewCategoryService(queries, db),
 	}
 }

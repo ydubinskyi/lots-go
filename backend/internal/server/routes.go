@@ -7,6 +7,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+
+	app_middleware "backend/internal/middleware"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -17,6 +19,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Use(middleware.URLFormat)
 	r.Use(render.SetContentType(render.ContentTypeJSON))
 
+	r.Use(app_middleware.Locale)
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
@@ -27,6 +30,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Route("/users", s.handlers.User.Routes)
+		r.Route("/categories", s.handlers.Category.Routes)
 	})
 
 	r.Get("/health", s.handlers.Health.Check)

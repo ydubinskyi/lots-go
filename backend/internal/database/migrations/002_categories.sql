@@ -27,6 +27,7 @@ CREATE TABLE category_translations (
     language_code language_code NOT NULL,  -- ENUM type
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL,
+    full_slug VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_at TIMESTAMP NULL,

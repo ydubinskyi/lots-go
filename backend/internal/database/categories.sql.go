@@ -49,11 +49,12 @@ INSERT INTO category_translations (
     category_id,
     language_code,
     title,
-    slug
+    slug,
+    full_slug
 ) VALUES (
-    $1, $2, $3, $4
+    $1, $2, $3, $4, $5
 )
-RETURNING id, category_id, language_code, title, slug, created_at, updated_at, deleted_at
+RETURNING id, category_id, language_code, title, slug, full_slug, created_at, updated_at, deleted_at
 `
 
 type CreateCategoryTranslationParams struct {
@@ -61,6 +62,7 @@ type CreateCategoryTranslationParams struct {
 	LanguageCode LanguageCode
 	Title        string
 	Slug         string
+	FullSlug     string
 }
 
 func (q *Queries) CreateCategoryTranslation(ctx context.Context, arg CreateCategoryTranslationParams) (CategoryTranslation, error) {
@@ -69,6 +71,7 @@ func (q *Queries) CreateCategoryTranslation(ctx context.Context, arg CreateCateg
 		arg.LanguageCode,
 		arg.Title,
 		arg.Slug,
+		arg.FullSlug,
 	)
 	var i CategoryTranslation
 	err := row.Scan(
@@ -77,6 +80,7 @@ func (q *Queries) CreateCategoryTranslation(ctx context.Context, arg CreateCateg
 		&i.LanguageCode,
 		&i.Title,
 		&i.Slug,
+		&i.FullSlug,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.DeletedAt,
@@ -106,7 +110,7 @@ func (q *Queries) GetCategory(ctx context.Context, id uuid.UUID) (Category, erro
 }
 
 const getCategoryTranslation = `-- name: GetCategoryTranslation :one
-SELECT id, category_id, language_code, title, slug, created_at, updated_at, deleted_at FROM category_translations
+SELECT id, category_id, language_code, title, slug, full_slug, created_at, updated_at, deleted_at FROM category_translations
 WHERE category_id = $1
   AND language_code = $2
   AND deleted_at IS NULL
@@ -126,11 +130,51 @@ func (q *Queries) GetCategoryTranslation(ctx context.Context, arg GetCategoryTra
 		&i.LanguageCode,
 		&i.Title,
 		&i.Slug,
+		&i.FullSlug,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.DeletedAt,
 	)
 	return i, err
+}
+
+const getCategoryTranslations = `-- name: GetCategoryTranslations :many
+SELECT id, category_id, language_code, title, slug, full_slug, created_at, updated_at, deleted_at FROM category_translations
+WHERE category_id = $1
+  AND deleted_at IS NULL
+`
+
+func (q *Queries) GetCategoryTranslations(ctx context.Context, categoryID uuid.UUID) ([]CategoryTranslation, error) {
+	rows, err := q.db.QueryContext(ctx, getCategoryTranslations, categoryID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []CategoryTranslation
+	for rows.Next() {
+		var i CategoryTranslation
+		if err := rows.Scan(
+			&i.ID,
+			&i.CategoryID,
+			&i.LanguageCode,
+			&i.Title,
+			&i.Slug,
+			&i.FullSlug,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getCategoryWithTranslation = `-- name: GetCategoryWithTranslation :one
@@ -143,6 +187,7 @@ SELECT
     c.updated_at,
     COALESCE(t_req.title, t_def.title) as title,
     COALESCE(t_req.slug, t_def.slug) as slug,
+    COALESCE(t_req.full_slug, t_def.full_slug) as full_slug,
     COALESCE(t_req.language_code, t_def.language_code) as language_code,
     CASE 
         WHEN t_req.title IS NOT NULL THEN t_req.language_code
@@ -175,6 +220,7 @@ type GetCategoryWithTranslationRow struct {
 	UpdatedAt        time.Time
 	Title            string
 	Slug             string
+	FullSlug         string
 	LanguageCode     LanguageCode
 	ResolvedLanguage interface{}
 }
@@ -191,6 +237,7 @@ func (q *Queries) GetCategoryWithTranslation(ctx context.Context, arg GetCategor
 		&i.UpdatedAt,
 		&i.Title,
 		&i.Slug,
+		&i.FullSlug,
 		&i.LanguageCode,
 		&i.ResolvedLanguage,
 	)
@@ -249,7 +296,8 @@ SELECT
     c.created_at,
     c.updated_at,
     COALESCE(t_req.title, t_def.title) as title,
-    COALESCE(t_req.slug, t_def.slug) as slug
+    COALESCE(t_req.slug, t_def.slug) as slug,
+    COALESCE(t_req.full_slug, t_def.full_slug) as full_slug
 FROM categories c
 LEFT JOIN category_translations t_req 
     ON c.id = t_req.category_id 
@@ -261,14 +309,7 @@ LEFT JOIN category_translations t_def
     AND t_def.deleted_at IS NULL
 WHERE c.deleted_at IS NULL
 ORDER BY c.depth, c.sort_order
-LIMIT $2 OFFSET $3
 `
-
-type ListCategoriesWithTranslationParams struct {
-	LanguageCode LanguageCode
-	Limit        int32
-	Offset       int32
-}
 
 type ListCategoriesWithTranslationRow struct {
 	ID        uuid.UUID
@@ -279,10 +320,11 @@ type ListCategoriesWithTranslationRow struct {
 	UpdatedAt time.Time
 	Title     string
 	Slug      string
+	FullSlug  string
 }
 
-func (q *Queries) ListCategoriesWithTranslation(ctx context.Context, arg ListCategoriesWithTranslationParams) ([]ListCategoriesWithTranslationRow, error) {
-	rows, err := q.db.QueryContext(ctx, listCategoriesWithTranslation, arg.LanguageCode, arg.Limit, arg.Offset)
+func (q *Queries) ListCategoriesWithTranslation(ctx context.Context, languageCode LanguageCode) ([]ListCategoriesWithTranslationRow, error) {
+	rows, err := q.db.QueryContext(ctx, listCategoriesWithTranslation, languageCode)
 	if err != nil {
 		return nil, err
 	}
@@ -299,6 +341,7 @@ func (q *Queries) ListCategoriesWithTranslation(ctx context.Context, arg ListCat
 			&i.UpdatedAt,
 			&i.Title,
 			&i.Slug,
+			&i.FullSlug,
 		); err != nil {
 			return nil, err
 		}

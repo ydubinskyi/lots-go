@@ -23,13 +23,20 @@ type CreateCategoryOutput struct {
 	SortOrder int32         `json:"sort_order"`
 }
 
+type CategoryTranslationOutput struct {
+	ID           uuid.UUID `json:"id"`
+	LanguageCode string    `json:"language_code"`
+	Title        string    `json:"title"`
+	Slug         string    `json:"slug"`
+	FullSlug     string    `json:"full_slug"`
+}
+
 type CategoryDetailsOutput struct {
-	ID        uuid.UUID     `json:"id"`
-	ParentID  uuid.NullUUID `json:"parent_id"`
-	Depth     int32         `json:"depth"`
-	SortOrder int32         `json:"sort_order"`
-	Title     string        `json:"title"`
-	Slug      string        `json:"slug"`
+	ID           uuid.UUID                   `json:"id"`
+	ParentID     uuid.NullUUID               `json:"parent_id"`
+	Depth        int32                       `json:"depth"`
+	SortOrder    int32                       `json:"sort_order"`
+	Translations []CategoryTranslationOutput `json:"translations"`
 }
 
 type CategoryTreeItem struct {
@@ -39,9 +46,10 @@ type CategoryTreeItem struct {
 	SortOrder int32              `json:"sort_order"`
 	Title     string             `json:"title"`
 	Slug      string             `json:"slug"`
+	FullSlug  string             `json:"full_slug"`
 	Children  []CategoryTreeItem `json:"children"`
 }
 
-type CategoryTreeOutput struct {
+type CategoriesTreeOutput struct {
 	Items []CategoryTreeItem `json:"items"`
 }

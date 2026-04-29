@@ -72,6 +72,7 @@ type CategoryTranslation struct {
 	LanguageCode LanguageCode
 	Title        string
 	Slug         string
+	FullSlug     string
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 	DeletedAt    sql.NullTime

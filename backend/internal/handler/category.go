@@ -5,6 +5,7 @@ import (
 	"backend/internal/request"
 	"backend/internal/response"
 	"backend/internal/service"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -23,6 +24,7 @@ func NewCategoryHandler(svc *service.CategoryService) *CategoryHandler {
 func (h *CategoryHandler) Routes(r chi.Router) {
 	r.Post("/", h.CreateCategory)
 	r.Get("/{id}", h.GetCategoryById)
+	r.Get("/tree", h.GetCategoriesTree)
 }
 
 func (h *CategoryHandler) CreateCategory(w http.ResponseWriter, r *http.Request) {
@@ -53,15 +55,31 @@ func (h *CategoryHandler) GetCategoryById(w http.ResponseWriter, r *http.Request
 
 	cat, err := h.svc.GetById(r.Context(), id, locale)
 	if err != nil {
-		response.BadRequest(w, r, err)
+		switch {
+		case errors.Is(err, service.ErrCategoryNotFound):
+			response.NotFound(w, r, err)
+		default:
+			response.BadRequest(w, r, err)
+		}
+		return
 	}
 
 	response.OK(w, r, dto.CategoryDetailsOutput{
-		ID:        cat.ID,
-		ParentID:  cat.ParentID,
-		Depth:     cat.Depth,
-		SortOrder: cat.SortOrder,
-		Title:     cat.Title,
-		Slug:      cat.Slug,
+		ID:           cat.ID,
+		ParentID:     cat.ParentID,
+		Depth:        cat.Depth,
+		SortOrder:    cat.SortOrder,
+		Translations: cat.Translations,
 	})
+}
+
+func (h *CategoryHandler) GetCategoriesTree(w http.ResponseWriter, r *http.Request) {
+	locale := request.LocaleFromContext(r.Context())
+
+	result, err := h.svc.GetItemsTree(r.Context(), locale)
+	if err != nil {
+		response.BadRequest(w, r, err)
+	}
+
+	response.OK(w, r, result)
 }

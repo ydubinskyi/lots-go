@@ -43,10 +43,11 @@ func Forbidden(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func NotFound(w http.ResponseWriter, r *http.Request) {
+func NotFound(w http.ResponseWriter, r *http.Request, err error) {
 	render.Render(w, r, &ErrResponse{
 		HTTPStatusCode: http.StatusNotFound,
 		StatusText:     "Resource not found.",
+		ErrorText:      err.Error(),
 	})
 }
 

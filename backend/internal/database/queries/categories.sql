@@ -14,9 +14,10 @@ INSERT INTO category_translations (
     category_id,
     language_code,
     title,
-    slug
+    slug,
+    full_slug
 ) VALUES (
-    $1, $2, $3, $4
+    $1, $2, $3, $4, $5
 )
 RETURNING *;
 
@@ -32,6 +33,11 @@ WHERE category_id = $1
   AND language_code = $2
   AND deleted_at IS NULL;
 
+-- name: GetCategoryTranslations :many
+SELECT * FROM category_translations
+WHERE category_id = $1
+  AND deleted_at IS NULL;
+
 -- name: GetCategoryWithTranslation :one
 SELECT 
     c.id,
@@ -42,6 +48,7 @@ SELECT
     c.updated_at,
     COALESCE(t_req.title, t_def.title) as title,
     COALESCE(t_req.slug, t_def.slug) as slug,
+    COALESCE(t_req.full_slug, t_def.full_slug) as full_slug,
     COALESCE(t_req.language_code, t_def.language_code) as language_code,
     CASE 
         WHEN t_req.title IS NOT NULL THEN t_req.language_code
@@ -74,7 +81,8 @@ SELECT
     c.created_at,
     c.updated_at,
     COALESCE(t_req.title, t_def.title) as title,
-    COALESCE(t_req.slug, t_def.slug) as slug
+    COALESCE(t_req.slug, t_def.slug) as slug,
+    COALESCE(t_req.full_slug, t_def.full_slug) as full_slug
 FROM categories c
 LEFT JOIN category_translations t_req 
     ON c.id = t_req.category_id 
@@ -85,5 +93,4 @@ LEFT JOIN category_translations t_def
     AND t_def.language_code = 'en'
     AND t_def.deleted_at IS NULL
 WHERE c.deleted_at IS NULL
-ORDER BY c.depth, c.sort_order
-LIMIT $2 OFFSET $3;
+ORDER BY c.depth, c.sort_order;

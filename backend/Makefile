@@ -44,6 +44,13 @@ clean:
 	@echo "Cleaning..."
 	@rm -f main
 
+# Database seeds (separate version table, idempotent)
+seed-up:
+	goose -dir ./internal/database/seed -no-versioning up  
+
+seed-down:
+	goose -dir ./internal/database/seed -no-versioning down
+
 # Live Reload
 watch:
 	@if command -v air > /dev/null; then \
@@ -61,4 +68,4 @@ watch:
             fi; \
         fi
 
-.PHONY: all build run test clean watch docker-run docker-down itest
+.PHONY: all build run test clean watch docker-run docker-down itest seed-up seed-down

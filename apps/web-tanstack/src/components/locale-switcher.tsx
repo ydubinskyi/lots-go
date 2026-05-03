@@ -1,5 +1,4 @@
 import { useRouter } from "@tanstack/react-router";
-import { useTransition } from "react";
 import {
   Select,
   SelectContent,
@@ -7,35 +6,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@lots-go/ui/components/select";
-import type { Locale } from "@lots-go/api-client";
-import { setLocale, SUPPORTED_LOCALES } from "@/lib/locale";
+import type { Locale } from "@lots-go/i18n";
+import { DEFAULT_LOCALE } from "@lots-go/i18n";
+import { useTranslations } from "use-intl";
 
-const LABELS: Record<Locale, string> = {
-  en: "English",
-  pl: "Polski",
-  uk: "Українська",
-};
+interface LocaleSwitcherProps {
+  locale: Locale;
+  supportedLocales: readonly Locale[];
+}
 
-export function LocaleSwitcher({ current }: { current: Locale }) {
+export function LocaleSwitcher({ locale, supportedLocales }: LocaleSwitcherProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const t = useTranslations("nav");
 
   const onChange = (next: string) => {
-    startTransition(async () => {
-      await setLocale({ data: { locale: next as Locale } });
-      router.invalidate();
-    });
+    const currentPath = window.location.pathname;
+    const currentLocale = locale;
+
+    let basePath: string;
+    if (currentLocale === DEFAULT_LOCALE) {
+      basePath = currentPath;
+    } else {
+      basePath = currentPath.replace(new RegExp(`^/${currentLocale}(?=/|$)`), "") || "/";
+    }
+
+    const newPath =
+      next === DEFAULT_LOCALE ? basePath || "/" : `/${next}${basePath === "/" ? "" : basePath}`;
+
+    void router.navigate({ to: newPath });
   };
 
   return (
-    <Select value={current} onValueChange={onChange} disabled={isPending}>
-      <SelectTrigger className="w-32" aria-label="Select language">
+    <Select value={locale} onValueChange={onChange}>
+      <SelectTrigger className="w-32" aria-label={t("selectLanguage")}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {SUPPORTED_LOCALES.map((code) => (
+        {supportedLocales.map((code) => (
           <SelectItem key={code} value={code}>
-            {LABELS[code]}
+            {t(`languages.${code}`)}
           </SelectItem>
         ))}
       </SelectContent>

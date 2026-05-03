@@ -1,14 +1,18 @@
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
-import { LinkProvider, Link } from "@lots-go/ui/link";
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRoute,
+  useRouterState,
+} from "@tanstack/react-router";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { DEFAULT_LOCALE } from "@lots-go/i18n";
+import type { Locale } from "@lots-go/i18n";
 
 import appCss from "@lots-go/ui/globals.css?url";
 
-import { TanStackLinkAdapter } from "@/components/link-adapter";
-import { LocaleSwitcher } from "@/components/locale-switcher";
-import { getLocale } from "@/lib/locale";
-
 export const Route = createRootRoute({
-  loader: () => getLocale(),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -24,38 +28,38 @@ export const Route = createRootRoute({
     </main>
   ),
   shellComponent: RootDocument,
-  component: RootShell,
+  component: () => <Outlet />,
 });
 
-function RootShell() {
-  const locale = Route.useLoaderData();
-  return (
-    <LinkProvider component={TanStackLinkAdapter}>
-      <div className="min-h-svh flex flex-col">
-        <header className="border-b">
-          <div className="container mx-auto flex items-center justify-between gap-4 p-4">
-            <Link href="/" className="font-semibold">
-              lots-go
-            </Link>
-            <LocaleSwitcher current={locale} />
-          </div>
-        </header>
-        <main className="flex-1">
-          <Outlet />
-        </main>
-      </div>
-    </LinkProvider>
-  );
-}
-
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const locale = useRouterState({
+    select: (s) => {
+      for (const match of s.matches) {
+        const data = match.loaderData as Record<string, unknown> | undefined;
+        if (typeof data?.locale === "string") return data.locale as Locale;
+      }
+      return DEFAULT_LOCALE;
+    },
+  });
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <HeadContent />
       </head>
       <body>
         {children}
+        {import.meta.env.DEV ? (
+          <TanStackDevtools
+            config={{ position: "bottom-left" }}
+            plugins={[
+              {
+                name: "TanStack Router",
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+          />
+        ) : null}
         <Scripts />
       </body>
     </html>

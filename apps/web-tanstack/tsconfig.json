@@ -25,7 +25,9 @@
       "@/*": ["./src/*"],
       "@lots-go/ui/*": ["../../packages/ui/src/*"],
       "@lots-go/api-client": ["../../packages/api-client/src"],
-      "@lots-go/api-client/*": ["../../packages/api-client/src/*"]
+      "@lots-go/api-client/*": ["../../packages/api-client/src/*"],
+      "@lots-go/i18n": ["../../packages/i18n/src"],
+      "@lots-go/i18n/*": ["../../packages/i18n/src/*"]
     }
   }
 }

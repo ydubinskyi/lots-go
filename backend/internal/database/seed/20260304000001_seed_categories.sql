@@ -21,9 +21,27 @@ INSERT INTO categories (id, parent_id, depth, sort_order) VALUES
 ('33333333-3333-3333-3333-333333333334', '33333333-3333-3333-3333-333333333333', 1, 10),
 ('33333333-3333-3333-3333-333333333335', '33333333-3333-3333-3333-333333333333', 1, 20),
 ('33333333-3333-3333-3333-333333333336', '33333333-3333-3333-3333-333333333333', 1, 30),
+('33333333-3333-3333-3333-333333333339', '33333333-3333-3333-3333-333333333333', 1, 40),
+('33333333-3333-3333-3333-33333333333a', '33333333-3333-3333-3333-333333333333', 1, 50),
+('33333333-3333-3333-3333-33333333333b', '33333333-3333-3333-3333-333333333333', 1, 60),
 -- grandchildren (under Cars)
 ('33333333-3333-3333-3333-333333333337', '33333333-3333-3333-3333-333333333334', 2, 10),
-('33333333-3333-3333-3333-333333333338', '33333333-3333-3333-3333-333333333334', 2, 20)
+('33333333-3333-3333-3333-333333333338', '33333333-3333-3333-3333-333333333334', 2, 20),
+-- Construction (root)
+('44444444-4444-4444-4444-444444444444', NULL, 0, 40),
+-- children of Construction
+('44444444-4444-4444-4444-444444444445', '44444444-4444-4444-4444-444444444444', 1, 10),
+('44444444-4444-4444-4444-444444444446', '44444444-4444-4444-4444-444444444444', 1, 20),
+('44444444-4444-4444-4444-444444444447', '44444444-4444-4444-4444-444444444444', 1, 30),
+-- grandchildren (under Tools)
+('44444444-4444-4444-4444-444444444448', '44444444-4444-4444-4444-444444444445', 2, 10),
+('44444444-4444-4444-4444-444444444449', '44444444-4444-4444-4444-444444444445', 2, 20),
+-- grandchildren (under Materials)
+('44444444-4444-4444-4444-44444444444a', '44444444-4444-4444-4444-444444444446', 2, 10),
+('44444444-4444-4444-4444-44444444444b', '44444444-4444-4444-4444-444444444446', 2, 20),
+-- grandchildren (under Equipment)
+('44444444-4444-4444-4444-44444444444c', '44444444-4444-4444-4444-444444444447', 2, 10),
+('44444444-4444-4444-4444-44444444444d', '44444444-4444-4444-4444-444444444447', 2, 20)
 ON CONFLICT (id) DO UPDATE SET
   parent_id = EXCLUDED.parent_id,
   depth = EXCLUDED.depth,
@@ -86,7 +104,59 @@ INSERT INTO category_translations (id, category_id, language_code, title, slug, 
 -- SUVs
 ('aaaaaaa9-0000-0000-0000-000000000010', '33333333-3333-3333-3333-333333333338', 'en', 'SUVs', 'suvs', '/transport/cars/suvs'),
 ('aaaaaaa9-0000-0000-0000-000000000011', '33333333-3333-3333-3333-333333333338', 'uk', 'Позашляховики', 'pozashtovkhovykhy', '/transport/avtomobili/pozashtovkhovykhy'),
-('aaaaaaa9-0000-0000-0000-000000000012', '33333333-3333-3333-3333-333333333338', 'pl', 'SUV-y', 'suv-y', '/transport/samochody/suv-y')
+('aaaaaaa9-0000-0000-0000-000000000012', '33333333-3333-3333-3333-333333333338', 'pl', 'SUV-y', 'suv-y', '/transport/samochody/suv-y'),
+-- Trucks/Vans
+('aaaaaaa9-0000-0000-0000-000000000013', '33333333-3333-3333-3333-333333333339', 'en', 'Trucks & Vans',     'trucks-vans',        '/transport/trucks-vans'),
+('aaaaaaa9-0000-0000-0000-000000000014', '33333333-3333-3333-3333-333333333339', 'uk', 'Вантажівки і фургони', 'vantazhivky-furhony', '/transport/vantazhivky-furhony'),
+('aaaaaaa9-0000-0000-0000-000000000015', '33333333-3333-3333-3333-333333333339', 'pl', 'Ciężarówki i busy', 'ciezarowki-busy',    '/transport/ciezarowki-busy'),
+-- Boats/Watercraft
+('aaaaaaa9-0000-0000-0000-000000000016', '33333333-3333-3333-3333-33333333333a', 'en', 'Boats & Watercraft', 'boats-watercraft', '/transport/boats-watercraft'),
+('aaaaaaa9-0000-0000-0000-000000000017', '33333333-3333-3333-3333-33333333333a', 'uk', 'Човни і водна техніка', 'chovny-vodna-tekhnika', '/transport/chovny-vodna-tekhnika'),
+('aaaaaaa9-0000-0000-0000-000000000018', '33333333-3333-3333-3333-33333333333a', 'pl', 'Łodzie i jednostki pływające', 'lodzie-jednostki-plywajace', '/transport/lodzie-jednostki-plywajace'),
+-- Trailers
+('aaaaaaa9-0000-0000-0000-000000000019', '33333333-3333-3333-3333-33333333333b', 'en', 'Trailers',  'trailers', '/transport/trailers'),
+('aaaaaaa9-0000-0000-0000-00000000001a', '33333333-3333-3333-3333-33333333333b', 'uk', 'Причепи',   'prychepy', '/transport/prychepy'),
+('aaaaaaa9-0000-0000-0000-00000000001b', '33333333-3333-3333-3333-33333333333b', 'pl', 'Przyczepy', 'przyczepy', '/transport/przyczepy'),
+-- Construction (root)
+('aaaaaaab-0000-0000-0000-000000000001', '44444444-4444-4444-4444-444444444444', 'en', 'Construction', 'construction',   '/construction'),
+('aaaaaaab-0000-0000-0000-000000000002', '44444444-4444-4444-4444-444444444444', 'uk', 'Будівництво',  'budivnytstvo',   '/budivnytstvo'),
+('aaaaaaab-0000-0000-0000-000000000003', '44444444-4444-4444-4444-444444444444', 'pl', 'Budownictwo',  'budownictwo',    '/budownictwo'),
+-- Tools
+('aaaaaaab-0000-0000-0000-000000000004', '44444444-4444-4444-4444-444444444445', 'en', 'Tools',         'tools',        '/construction/tools'),
+('aaaaaaab-0000-0000-0000-000000000005', '44444444-4444-4444-4444-444444444445', 'uk', 'Інструменти',   'instrumenty',  '/budivnytstvo/instrumenty'),
+('aaaaaaab-0000-0000-0000-000000000006', '44444444-4444-4444-4444-444444444445', 'pl', 'Narzędzia',     'narzedzia',    '/budownictwo/narzedzia'),
+-- Materials
+('aaaaaaab-0000-0000-0000-000000000007', '44444444-4444-4444-4444-444444444446', 'en', 'Materials',     'materials',    '/construction/materials'),
+('aaaaaaab-0000-0000-0000-000000000008', '44444444-4444-4444-4444-444444444446', 'uk', 'Матеріали',     'materialy',    '/budivnytstvo/materialy'),
+('aaaaaaab-0000-0000-0000-000000000009', '44444444-4444-4444-4444-444444444446', 'pl', 'Materiały',     'materialy',    '/budownictwo/materialy'),
+-- Equipment
+('aaaaaaab-0000-0000-0000-00000000000a', '44444444-4444-4444-4444-444444444447', 'en', 'Equipment',     'equipment',    '/construction/equipment'),
+('aaaaaaab-0000-0000-0000-00000000000b', '44444444-4444-4444-4444-444444444447', 'uk', 'Обладнання',    'obladnannia',  '/budivnytstvo/obladnannia'),
+('aaaaaaab-0000-0000-0000-00000000000c', '44444444-4444-4444-4444-444444444447', 'pl', 'Sprzęt',        'sprzet',       '/budownictwo/sprzet'),
+-- Power Tools
+('aaaaaaab-0000-0000-0000-00000000000d', '44444444-4444-4444-4444-444444444448', 'en', 'Power Tools',         'power-tools',         '/construction/tools/power-tools'),
+('aaaaaaab-0000-0000-0000-00000000000e', '44444444-4444-4444-4444-444444444448', 'uk', 'Електроінструменти',  'elektroinstrumenty',  '/budivnytstvo/instrumenty/elektroinstrumenty'),
+('aaaaaaab-0000-0000-0000-00000000000f', '44444444-4444-4444-4444-444444444448', 'pl', 'Elektronarzędzia',    'elektronarzedzia',    '/budownictwo/narzedzia/elektronarzedzia'),
+-- Hand Tools
+('aaaaaaab-0000-0000-0000-000000000010', '44444444-4444-4444-4444-444444444449', 'en', 'Hand Tools',          'hand-tools',          '/construction/tools/hand-tools'),
+('aaaaaaab-0000-0000-0000-000000000011', '44444444-4444-4444-4444-444444444449', 'uk', 'Ручні інструменти',   'ruchni-instrumenty',  '/budivnytstvo/instrumenty/ruchni-instrumenty'),
+('aaaaaaab-0000-0000-0000-000000000012', '44444444-4444-4444-4444-444444444449', 'pl', 'Narzędzia ręczne',    'narzedzia-reczne',    '/budownictwo/narzedzia/narzedzia-reczne'),
+-- Lumber & Wood
+('aaaaaaab-0000-0000-0000-000000000013', '44444444-4444-4444-4444-44444444444a', 'en', 'Lumber & Wood',  'lumber-wood',  '/construction/materials/lumber-wood'),
+('aaaaaaab-0000-0000-0000-000000000014', '44444444-4444-4444-4444-44444444444a', 'uk', 'Деревина',       'derevyna',     '/budivnytstvo/materialy/derevyna'),
+('aaaaaaab-0000-0000-0000-000000000015', '44444444-4444-4444-4444-44444444444a', 'pl', 'Drewno',         'drewno',       '/budownictwo/materialy/drewno'),
+-- Concrete & Masonry
+('aaaaaaab-0000-0000-0000-000000000016', '44444444-4444-4444-4444-44444444444b', 'en', 'Concrete & Masonry', 'concrete-masonry',  '/construction/materials/concrete-masonry'),
+('aaaaaaab-0000-0000-0000-000000000017', '44444444-4444-4444-4444-44444444444b', 'uk', 'Бетон і кладка',     'beton-i-kladka',    '/budivnytstvo/materialy/beton-i-kladka'),
+('aaaaaaab-0000-0000-0000-000000000018', '44444444-4444-4444-4444-44444444444b', 'pl', 'Beton i murarstwo',  'beton-i-murarstwo', '/budownictwo/materialy/beton-i-murarstwo'),
+-- Generators
+('aaaaaaab-0000-0000-0000-000000000019', '44444444-4444-4444-4444-44444444444c', 'en', 'Generators',  'generators', '/construction/equipment/generators'),
+('aaaaaaab-0000-0000-0000-00000000001a', '44444444-4444-4444-4444-44444444444c', 'uk', 'Генератори',  'heneratory', '/budivnytstvo/obladnannia/heneratory'),
+('aaaaaaab-0000-0000-0000-00000000001b', '44444444-4444-4444-4444-44444444444c', 'pl', 'Generatory',  'generatory', '/budownictwo/sprzet/generatory'),
+-- Excavators
+('aaaaaaab-0000-0000-0000-00000000001c', '44444444-4444-4444-4444-44444444444d', 'en', 'Excavators',   'excavators',   '/construction/equipment/excavators'),
+('aaaaaaab-0000-0000-0000-00000000001d', '44444444-4444-4444-4444-44444444444d', 'uk', 'Екскаватори',  'ekskavatory',  '/budivnytstvo/obladnannia/ekskavatory'),
+('aaaaaaab-0000-0000-0000-00000000001e', '44444444-4444-4444-4444-44444444444d', 'pl', 'Koparki',      'koparki',      '/budownictwo/sprzet/koparki')
 ON CONFLICT (category_id, language_code) DO UPDATE SET
   title = EXCLUDED.title,
   slug = EXCLUDED.slug,
@@ -109,5 +179,18 @@ WHERE id IN (
   '33333333-3333-3333-3333-333333333335',
   '33333333-3333-3333-3333-333333333336',
   '33333333-3333-3333-3333-333333333337',
-  '33333333-3333-3333-3333-333333333338'
+  '33333333-3333-3333-3333-333333333338',
+  '33333333-3333-3333-3333-333333333339',
+  '33333333-3333-3333-3333-33333333333a',
+  '33333333-3333-3333-3333-33333333333b',
+  '44444444-4444-4444-4444-444444444444',
+  '44444444-4444-4444-4444-444444444445',
+  '44444444-4444-4444-4444-444444444446',
+  '44444444-4444-4444-4444-444444444447',
+  '44444444-4444-4444-4444-444444444448',
+  '44444444-4444-4444-4444-444444444449',
+  '44444444-4444-4444-4444-44444444444a',
+  '44444444-4444-4444-4444-44444444444b',
+  '44444444-4444-4444-4444-44444444444c',
+  '44444444-4444-4444-4444-44444444444d'
 );

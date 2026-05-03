@@ -4,7 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository layout
 
-This is a monorepo. Today it contains a single Go API in `backend/`; multiple frontend apps will be added at the repo root alongside it. There is no top-level build tool — each app manages its own toolchain. The Go module name is `backend`, so internal imports look like `backend/internal/...`.
+This is a monorepo with a Go API in `backend/` and a JS/TS workspace at the root for one or more frontend apps:
+
+```
+backend/                  # Go API (chi + sqlc + Postgres) — independent toolchain
+apps/
+  web-tanstack/           # TanStack Start app (Vite). Next.js app to follow.
+packages/
+  ui/                     # shadcn components + shared <Link> primitive
+  api-client/             # typed fetch wrapper for the Go API
+package.json              # JS workspace root (pnpm + Turborepo)
+pnpm-workspace.yaml
+turbo.json
+```
+
+The Go module name is `backend`, so internal Go imports look like `backend/internal/...`. JS workspace packages are namespaced `@lots-go/*` (e.g. `@lots-go/ui`, `@lots-go/api-client`, `@lots-go/web-tanstack`). The two halves are independent — Turborepo orchestrates JS work; backend is built/tested via `make` only.
 
 ## Commands (backend)
 

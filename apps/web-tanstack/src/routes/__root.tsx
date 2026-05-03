@@ -1,3 +1,4 @@
+import { TanStackDevtools } from "@tanstack/react-devtools";
 import {
   HeadContent,
   Outlet,
@@ -5,11 +6,10 @@ import {
   createRootRoute,
   useRouterState,
 } from "@tanstack/react-router";
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+
 import { DEFAULT_LOCALE } from "@lots-go/i18n";
 import type { Locale } from "@lots-go/i18n";
-
 import appCss from "@lots-go/ui/globals.css?url";
 
 export const Route = createRootRoute({

@@ -1,3 +1,28 @@
 {
-  "$schema": "./node_modules/oxfmt/configuration_schema.json"
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "sortImports": {
+    "customGroups": [
+      {
+        "groupName": "react-libs",
+        "elementNamePattern": ["react", "react-**", "@react-**/**"]
+      },
+      {
+        "groupName": "internal-workspace",
+        "elementNamePattern": ["@lots-go/**"]
+      },
+      {
+        "groupName": "local-alias",
+        "elementNamePattern": ["@/**"]
+      }
+    ],
+    "groups": [
+      "react-libs",
+      ["value-builtin", "value-external"],
+      "internal-workspace",
+      ["local-alias", "value-parent", "value-sibling", "value-index"],
+      "unknown"
+    ]
+  },
+  "sortPackageJson": true,
+  "sortTailwindcss": true,
 }

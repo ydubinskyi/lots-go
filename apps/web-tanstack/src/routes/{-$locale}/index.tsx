@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { useTranslations } from "use-intl";
+
 import {
   Card,
   CardContent,
@@ -10,7 +12,6 @@ import {
 import { Link } from "@lots-go/ui/link";
 
 import { apiClient } from "@/lib/api";
-import { createServerFn } from "@tanstack/react-start";
 
 const getCategoriesTree = createServerFn({ method: "GET" }).handler(async () => {
   const tree = await apiClient.getCategoryTree();

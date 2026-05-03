@@ -1,7 +1,8 @@
 import { Link as TSRLink, useParams } from "@tanstack/react-router";
-import type { LinkComponent, LinkProps } from "@lots-go/ui/link";
+
 import { DEFAULT_LOCALE } from "@lots-go/i18n";
 import type { Locale } from "@lots-go/i18n";
+import type { LinkComponent, LinkProps } from "@lots-go/ui/link";
 
 export const TanStackLinkAdapter: LinkComponent = ({
   href,

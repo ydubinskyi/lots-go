@@ -1,8 +1,10 @@
 import { Outlet, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { IntlProvider } from "use-intl";
+
 import { isValidLocale, DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@lots-go/i18n";
 import type { Locale } from "@lots-go/i18n";
 import { Link, LinkProvider } from "@lots-go/ui/link";
+
 import { TanStackLinkAdapter } from "@/components/link-adapter";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { loadMessages } from "@/i18n/load-messages";
@@ -34,7 +36,7 @@ function LocaleLayout() {
   return (
     <IntlProvider locale={locale} messages={messages} timeZone="UTC">
       <LinkProvider component={TanStackLinkAdapter}>
-        <div className="min-h-svh flex flex-col">
+        <div className="flex min-h-svh flex-col">
           <header className="border-b">
             <div className="container mx-auto flex items-center justify-between gap-4 p-4">
               <Link href="/" className="font-semibold">

@@ -1,5 +1,6 @@
-import type { AbstractIntlMessages } from "use-intl";
 import type { Locale } from "@lots-go/i18n";
+
+import type { AbstractIntlMessages } from "use-intl";
 
 export async function loadMessages(locale: Locale): Promise<AbstractIntlMessages> {
   switch (locale) {

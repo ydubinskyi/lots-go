@@ -1,4 +1,8 @@
 import { useRouter } from "@tanstack/react-router";
+import { useTranslations } from "use-intl";
+
+import { DEFAULT_LOCALE } from "@lots-go/i18n";
+import type { Locale } from "@lots-go/i18n";
 import {
   Select,
   SelectContent,
@@ -6,9 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@lots-go/ui/components/select";
-import type { Locale } from "@lots-go/i18n";
-import { DEFAULT_LOCALE } from "@lots-go/i18n";
-import { useTranslations } from "use-intl";
 
 interface LocaleSwitcherProps {
   locale: Locale;

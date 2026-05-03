@@ -17,8 +17,12 @@ make build        # produces ./main
 make test         # go test ./... -v
 make itest        # integration tests for the database layer only (./internal/database)
 
-make docker-run   # start PostgreSQL via docker-compose
+make docker-run   # start PostgreSQL via docker-compose (detached; doesn't block the shell)
 make docker-down  # stop PostgreSQL
+
+make migrate-up      # apply pending migrations (goose, versioned)
+make migrate-down    # roll back the last migration
+make migrate-status  # show applied/pending migrations
 
 make seed-up      # apply seeds (goose, no-versioning mode)
 make seed-down    # roll back the last seed
@@ -26,17 +30,17 @@ make seed-down    # roll back the last seed
 
 Run a single test: `cd backend && go test ./internal/service -run TestName -v`.
 
-Migrations are not in the Makefile — run goose directly using vars from `.env`:
-
-```bash
-cd backend && source .env && goose -dir $GOOSE_MIGRATION_DIR $GOOSE_DRIVER $GOOSE_DBSTRING up
-```
+The `goose` binary picks up `GOOSE_DRIVER` / `GOOSE_DBSTRING` / `GOOSE_MIGRATION_DIR` from the shell environment — works directly if you have direnv (or have sourced `.env` yourself). If not, prefix with `set -a; . ./.env; set +a;` before invoking `goose` or any `make migrate-*` / `make seed-*` target.
 
 Regenerate sqlc code after editing `internal/database/queries/*.sql` or `internal/database/migrations/*.sql`:
 
 ```bash
 cd backend && sqlc generate     # config: backend/sqlc.yaml
 ```
+
+**sqlc strictness gotchas** for queries Postgres would accept but sqlc rejects:
+- **Recursive CTEs:** alias every table reference in the anchor query (`SELECT c.id FROM categories c WHERE c.id = $1`), not bare `id` — sqlc's parser flags `id` as ambiguous against the recursive name.
+- **`ORDER BY` after multi-join translation fallback:** referencing the SELECT alias of a `COALESCE(t_req.col, t_def.col)` column in `ORDER BY` triggers "ambiguous column" because both join sources expose that name. Repeat the full `COALESCE(...)` expression in `ORDER BY`, or set `strict_order_by: false` in `sqlc.yaml`.
 
 `.env` is auto-loaded by `github.com/joho/godotenv/autoload` (imported in `internal/server/server.go`); copy `.env.example` to `.env` to start.
 
@@ -116,7 +120,7 @@ The `defer tx.Rollback()` is intentional and safe — it's a no-op once `Commit(
 Copy `backend/.env.example` to `backend/.env`. Keys:
 
 ```
-PORT=8080
+PORT=3000
 APP_ENV=local
 DB_URL=postgres://postgres:postgres@localhost:5432/lots_go?sslmode=disable
 GOOSE_DRIVER=postgres

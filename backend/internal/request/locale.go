@@ -28,8 +28,8 @@ func WithLocale(ctx context.Context, locale database.LanguageCode) context.Conte
 }
 
 func LocaleFromContext(ctx context.Context) database.LanguageCode {
-	if locale, ok := ctx.Value(localeContextKey).(string); ok && locale != "" {
-		return database.LanguageCode(locale)
+	if locale, ok := ctx.Value(localeContextKey).(database.LanguageCode); ok && locale != "" {
+		return locale
 	}
 
 	return DefaultLocale

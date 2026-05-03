@@ -14,17 +14,22 @@ import (
 )
 
 type CategoryHandler struct {
-	svc *service.CategoryService
+	svc     *service.CategoryService
+	attrSvc *service.AttributeService
 }
 
-func NewCategoryHandler(svc *service.CategoryService) *CategoryHandler {
-	return &CategoryHandler{svc: svc}
+func NewCategoryHandler(svc *service.CategoryService, attrSvc *service.AttributeService) *CategoryHandler {
+	return &CategoryHandler{svc: svc, attrSvc: attrSvc}
 }
 
 func (h *CategoryHandler) Routes(r chi.Router) {
 	r.Post("/", h.CreateCategory)
 	r.Get("/{id}", h.GetCategoryById)
 	r.Get("/tree", h.GetCategoriesTree)
+
+	r.Get("/{id}/attributes", h.GetCategoryAttributes)
+	r.Post("/{id}/attributes/{attributeID}", h.AttachAttribute)
+	r.Delete("/{id}/attributes/{attributeID}", h.DetachAttribute)
 }
 
 func (h *CategoryHandler) CreateCategory(w http.ResponseWriter, r *http.Request) {
@@ -82,4 +87,90 @@ func (h *CategoryHandler) GetCategoriesTree(w http.ResponseWriter, r *http.Reque
 	}
 
 	response.OK(w, r, result)
+}
+
+func (h *CategoryHandler) GetCategoryAttributes(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "id"))
+	if err != nil {
+		response.BadRequest(w, r, fmt.Errorf("invalid category id: must be UUID"))
+		return
+	}
+
+	locale := request.LocaleFromContext(r.Context())
+
+	out, err := h.attrSvc.GetEffectiveForCategory(r.Context(), id, locale)
+	if err != nil {
+		switch {
+		case errors.Is(err, service.ErrCategoryNotFound):
+			response.NotFound(w, r, err)
+		default:
+			response.BadRequest(w, r, err)
+		}
+		return
+	}
+
+	response.OK(w, r, out)
+}
+
+func (h *CategoryHandler) AttachAttribute(w http.ResponseWriter, r *http.Request) {
+	categoryID, err := uuid.Parse(chi.URLParam(r, "id"))
+	if err != nil {
+		response.BadRequest(w, r, fmt.Errorf("invalid category id: must be UUID"))
+		return
+	}
+	attributeID, err := uuid.Parse(chi.URLParam(r, "attributeID"))
+	if err != nil {
+		response.BadRequest(w, r, fmt.Errorf("invalid attribute id: must be UUID"))
+		return
+	}
+
+	var input dto.AttachAttributeToCategoryInput
+	if err := request.DecodeAndValidate(r, &input); err != nil {
+		response.BadRequest(w, r, err)
+		return
+	}
+
+	if err := h.attrSvc.AttachToCategory(r.Context(), categoryID, attributeID, input); err != nil {
+		switch {
+		case errors.Is(err, service.ErrCategoryNotFound), errors.Is(err, service.ErrAttributeNotFound):
+			response.NotFound(w, r, err)
+		case errors.Is(err, service.ErrAttributeAlreadyAttached):
+			response.Conflict(w, r, err)
+		default:
+			response.BadRequest(w, r, err)
+		}
+		return
+	}
+
+	response.Created(w, r, map[string]any{
+		"category_id":  categoryID,
+		"attribute_id": attributeID,
+		"sort_order":   input.SortOrder,
+		"is_required":  input.IsRequired,
+	})
+}
+
+func (h *CategoryHandler) DetachAttribute(w http.ResponseWriter, r *http.Request) {
+	categoryID, err := uuid.Parse(chi.URLParam(r, "id"))
+	if err != nil {
+		response.BadRequest(w, r, fmt.Errorf("invalid category id: must be UUID"))
+		return
+	}
+	attributeID, err := uuid.Parse(chi.URLParam(r, "attributeID"))
+	if err != nil {
+		response.BadRequest(w, r, fmt.Errorf("invalid attribute id: must be UUID"))
+		return
+	}
+
+	if err := h.attrSvc.DetachFromCategory(r.Context(), categoryID, attributeID); err != nil {
+		switch {
+		case errors.Is(err, service.ErrAttributeNotAttached):
+			response.NotFound(w, r, err)
+		default:
+			response.BadRequest(w, r, err)
+		}
+		return
+	}
+
+	response.NoContent(w, r)
 }

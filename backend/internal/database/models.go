@@ -56,6 +56,25 @@ func (ns NullLanguageCode) Value() (driver.Value, error) {
 	return string(ns.LanguageCode), nil
 }
 
+type Attribute struct {
+	ID        uuid.UUID
+	Code      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+}
+
+type AttributeTranslation struct {
+	ID           uuid.UUID
+	AttributeID  uuid.UUID
+	LanguageCode LanguageCode
+	Label        string
+	Slug         string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    sql.NullTime
+}
+
 type Category struct {
 	ID        uuid.UUID
 	ParentID  uuid.NullUUID
@@ -64,6 +83,15 @@ type Category struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime
+}
+
+type CategoryAttribute struct {
+	CategoryID  uuid.UUID
+	AttributeID uuid.UUID
+	SortOrder   int32
+	IsRequired  bool
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type CategoryTranslation struct {

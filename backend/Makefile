@@ -12,13 +12,13 @@ build:
 # Run the application
 run:
 	@go run cmd/api/main.go
-# Create DB container
+# Create DB container (detached so the shell isn't blocked)
 docker-run:
-	@if docker compose up --build 2>/dev/null; then \
+	@if docker compose up --build -d 2>/dev/null; then \
 		: ; \
 	else \
 		echo "Falling back to Docker Compose V1"; \
-		docker-compose up --build; \
+		docker-compose up --build -d; \
 	fi
 
 # Shutdown DB container
@@ -44,9 +44,19 @@ clean:
 	@echo "Cleaning..."
 	@rm -f main
 
+# Database migrations (goose reads GOOSE_DRIVER / GOOSE_DBSTRING / GOOSE_MIGRATION_DIR from .env via godotenv)
+migrate-up:
+	goose up
+
+migrate-down:
+	goose down
+
+migrate-status:
+	goose status
+
 # Database seeds (separate version table, idempotent)
 seed-up:
-	goose -dir ./internal/database/seed -no-versioning up  
+	goose -dir ./internal/database/seed -no-versioning up
 
 seed-down:
 	goose -dir ./internal/database/seed -no-versioning down
@@ -68,4 +78,4 @@ watch:
             fi; \
         fi
 
-.PHONY: all build run test clean watch docker-run docker-down itest seed-up seed-down
+.PHONY: all build run test clean watch docker-run docker-down itest migrate-up migrate-down migrate-status seed-up seed-down

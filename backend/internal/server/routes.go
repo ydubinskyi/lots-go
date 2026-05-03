@@ -31,6 +31,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Route("/users", s.handlers.User.Routes)
 		r.Route("/categories", s.handlers.Category.Routes)
+		r.Route("/attributes", s.handlers.Attribute.Routes)
 	})
 
 	r.Get("/health", s.handlers.Health.Check)

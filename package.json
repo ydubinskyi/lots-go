@@ -1,0 +1,23 @@
+{
+  "name": "lots-go",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "oxlint",
+    "format": "oxfmt apps packages package.json",
+    "format:check": "oxfmt --check apps packages package.json",
+    "typecheck": "turbo typecheck"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.47.0",
+    "oxlint": "^1.62.0",
+    "turbo": "^2.8.17",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.33.2"
+}

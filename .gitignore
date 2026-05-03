@@ -137,3 +137,19 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Monorepo / Turborepo
+.turbo
+.vercel
+
+# TanStack Start / Nitro / Vinxi build outputs
+.output
+.nitro
+.tanstack
+.vinxi
+
+# OS junk
+.DS_Store
+
+# Certs
+*.pem

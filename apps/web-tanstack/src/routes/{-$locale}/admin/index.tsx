@@ -1,19 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useTranslations } from "use-intl";
+import { createFileRoute } from "@tanstack/react-router"
+import { useTranslations } from "use-intl"
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@lots-go/ui/components/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@lots-go/ui/components/card"
 
 export const Route = createFileRoute("/{-$locale}/admin/")({
   component: AdminDashboard,
-});
+})
 
 function AdminDashboard() {
-  const t = useTranslations("admin.dashboard");
+  const t = useTranslations("admin.dashboard")
 
   return (
     <div className="flex items-center justify-center py-16">
@@ -26,5 +21,5 @@ function AdminDashboard() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

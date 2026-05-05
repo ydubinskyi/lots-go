@@ -1,32 +1,20 @@
-import * as React from "react";
-import {
-  createFileRoute,
-  useLoaderData,
-  useParams,
-} from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useForm } from "@tanstack/react-form";
-import { useTranslations } from "use-intl";
+import * as React from "react"
+
+import { useForm } from "@tanstack/react-form"
+import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, useLoaderData, useParams } from "@tanstack/react-router"
+import { CheckIcon } from "lucide-react"
+import { useTranslations } from "use-intl"
 
 import type {
   AttributeListItemOutput,
   CategoryAttributeOutput,
   CategoryAttributesOutput,
   CategoryDetailsOutput,
-} from "@lots-go/api-client";
-import { isValidLocale, DEFAULT_LOCALE } from "@lots-go/i18n";
-import { Badge } from "@lots-go/ui/components/badge";
-import { Button } from "@lots-go/ui/components/button";
-import { Input } from "@lots-go/ui/components/input";
-import { Label } from "@lots-go/ui/components/label";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@lots-go/ui/components/sheet";
-import { Switch } from "@lots-go/ui/components/switch";
+} from "@lots-go/api-client"
+import { isValidLocale, DEFAULT_LOCALE } from "@lots-go/i18n"
+import { Badge } from "@lots-go/ui/components/badge"
+import { Button } from "@lots-go/ui/components/button"
 import {
   Command,
   CommandEmpty,
@@ -34,63 +22,72 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@lots-go/ui/components/command";
-import { CheckIcon } from "lucide-react";
-import { cn } from "@lots-go/ui/lib/utils";
+} from "@lots-go/ui/components/command"
+import { Input } from "@lots-go/ui/components/input"
+import { Label } from "@lots-go/ui/components/label"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@lots-go/ui/components/sheet"
+import { Switch } from "@lots-go/ui/components/switch"
+import { cn } from "@lots-go/ui/lib/utils"
 
-import { categoryDetailQuery, categoryAttributesQuery, attributesListQuery } from "@/lib/queries";
-import { useAttachAttribute, useDetachAttribute } from "@/lib/mutations";
+import { useAttachAttribute, useDetachAttribute } from "@/lib/mutations"
+import { categoryDetailQuery, categoryAttributesQuery, attributesListQuery } from "@/lib/queries"
 
 export const Route = createFileRoute("/{-$locale}/admin/categories/$id")({
   loader: async ({ params, context }) => {
-    const locale = isValidLocale(params.locale) ? params.locale : DEFAULT_LOCALE;
+    const locale = isValidLocale(params.locale) ? params.locale : DEFAULT_LOCALE
     await Promise.all([
       context.queryClient.ensureQueryData(categoryDetailQuery(params.id, locale)),
       context.queryClient.ensureQueryData(categoryAttributesQuery(params.id, locale)),
       context.queryClient.ensureQueryData(attributesListQuery({ page: 1, pageSize: 100 }, locale)),
-    ]);
+    ])
   },
   component: CategoryDetailPage,
-});
+})
 
 function CategoryDetailPage() {
-  const { locale } = useLoaderData({ from: "/{-$locale}" });
-  const { id } = useParams({ from: "/{-$locale}/admin/categories/$id" });
-  const t = useTranslations("admin.categoryDetail");
-  const tAttach = useTranslations("admin.attachAttribute");
+  const { locale } = useLoaderData({ from: "/{-$locale}" })
+  const { id } = useParams({ from: "/{-$locale}/admin/categories/$id" })
+  const t = useTranslations("admin.categoryDetail")
+  const tAttach = useTranslations("admin.attachAttribute")
 
-  const { data: category } = useQuery<CategoryDetailsOutput>(categoryDetailQuery(id, locale));
-  const { data: catAttrs } = useQuery<CategoryAttributesOutput>(
-    categoryAttributesQuery(id, locale),
-  );
-  const { data: allAttrs } = useQuery<{ items: AttributeListItemOutput[]; total: number; page: number; pageSize: number }>(
-    attributesListQuery({ page: 1, pageSize: 100 }, locale),
-  );
+  const { data: category } = useQuery<CategoryDetailsOutput>(categoryDetailQuery(id, locale))
+  const { data: catAttrs } = useQuery<CategoryAttributesOutput>(categoryAttributesQuery(id, locale))
+  const { data: allAttrs } = useQuery<{
+    items: AttributeListItemOutput[]
+    total: number
+    page: number
+    pageSize: number
+  }>(attributesListQuery({ page: 1, pageSize: 100 }, locale))
 
-  const attachMutation = useAttachAttribute(id, locale);
-  const detachMutation = useDetachAttribute(id, locale);
+  const attachMutation = useAttachAttribute(id, locale)
+  const detachMutation = useDetachAttribute(id, locale)
 
-  const [sheetOpen, setSheetOpen] = React.useState(false);
-  const [selectedAttrId, setSelectedAttrId] = React.useState<string | null>(null);
+  const [sheetOpen, setSheetOpen] = React.useState(false)
+  const [selectedAttrId, setSelectedAttrId] = React.useState<string | null>(null)
 
   const attachForm = useForm({
     defaultValues: { sort_order: 0, is_required: false },
     onSubmit: async ({ value }) => {
-      if (!selectedAttrId) return;
+      if (!selectedAttrId) return
       await attachMutation.mutateAsync({
         attributeId: selectedAttrId,
         input: value,
-      });
-      setSheetOpen(false);
-      setSelectedAttrId(null);
+      })
+      setSheetOpen(false)
+      setSelectedAttrId(null)
     },
-  });
+  })
 
-  const attachedIds = new Set(catAttrs?.items.map((a) => a.id) ?? []);
-  const availableAttrs =
-    allAttrs?.items.filter((a) => !attachedIds.has(a.id)) ?? [];
+  const attachedIds = new Set(catAttrs?.items.map((a) => a.id) ?? [])
+  const availableAttrs = allAttrs?.items.filter((a) => !attachedIds.has(a.id)) ?? []
 
-  if (!category) return null;
+  if (!category) return null
 
   return (
     <div className="space-y-8">
@@ -101,11 +98,11 @@ function CategoryDetailPage() {
 
       <section className="space-y-2">
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-          <dt className="font-medium text-muted-foreground">{t("id")}</dt>
+          <dt className="text-muted-foreground font-medium">{t("id")}</dt>
           <dd className="font-mono">{category.id}</dd>
-          <dt className="font-medium text-muted-foreground">{t("depth")}</dt>
+          <dt className="text-muted-foreground font-medium">{t("depth")}</dt>
           <dd>{category.depth}</dd>
-          <dt className="font-medium text-muted-foreground">{t("sortOrder")}</dt>
+          <dt className="text-muted-foreground font-medium">{t("sortOrder")}</dt>
           <dd>{category.sort_order}</dd>
         </dl>
       </section>
@@ -125,7 +122,7 @@ function CategoryDetailPage() {
               <tr key={tr.id} className="border-b last:border-0">
                 <td className="py-2 font-mono uppercase">{tr.language_code}</td>
                 <td className="py-2">{tr.title}</td>
-                <td className="py-2 font-mono text-xs text-muted-foreground">{tr.slug}</td>
+                <td className="text-muted-foreground py-2 font-mono text-xs">{tr.slug}</td>
               </tr>
             ))}
           </tbody>
@@ -148,8 +145,8 @@ function CategoryDetailPage() {
               <form
                 className="mt-4 space-y-4"
                 onSubmit={(e) => {
-                  e.preventDefault();
-                  void attachForm.handleSubmit();
+                  e.preventDefault()
+                  void attachForm.handleSubmit()
                 }}
               >
                 <div className="space-y-2">
@@ -171,7 +168,10 @@ function CategoryDetailPage() {
                                 selectedAttrId === attr.id ? "opacity-100" : "opacity-0",
                               )}
                             />
-                            {attr.label} <span className="ml-2 font-mono text-xs text-muted-foreground">{attr.code}</span>
+                            {attr.label}{" "}
+                            <span className="text-muted-foreground ml-2 font-mono text-xs">
+                              {attr.code}
+                            </span>
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -210,11 +210,7 @@ function CategoryDetailPage() {
                   <Button type="submit" disabled={!selectedAttrId || attachMutation.isPending}>
                     {tAttach("submit")}
                   </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setSheetOpen(false)}
-                  >
+                  <Button type="button" variant="outline" onClick={() => setSheetOpen(false)}>
                     {tAttach("cancel")}
                   </Button>
                 </div>
@@ -264,5 +260,5 @@ function CategoryDetailPage() {
         )}
       </section>
     </div>
-  );
+  )
 }

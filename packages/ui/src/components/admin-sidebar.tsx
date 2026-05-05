@@ -7,10 +7,9 @@ import {
   StoreIcon,
   TagIcon,
   UsersIcon,
-} from "lucide-react";
-import { useTranslations } from "use-intl";
+} from "lucide-react"
+import { useTranslations } from "use-intl"
 
-import { Link } from "@lots-go/ui/link";
 import {
   Sidebar,
   SidebarContent,
@@ -21,30 +20,31 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@lots-go/ui/components/sidebar";
+} from "@lots-go/ui/components/sidebar"
+import { Link } from "@lots-go/ui/link"
 
 interface NavItem {
-  labelKey: string;
-  icon: React.ElementType;
-  href: string;
+  labelKey: string
+  icon: React.ElementType
+  href: string
 }
 
-type NavLabelKey = "dashboard" | "categories" | "attributes" | "users" | "products" | "settings";
+type NavLabelKey = "dashboard" | "categories" | "attributes" | "users" | "products" | "settings"
 
 export function AdminSidebar() {
-  const t = useTranslations("admin.nav");
+  const t = useTranslations("admin.nav")
 
   const activeItems: Array<NavItem & { labelKey: NavLabelKey }> = [
     { labelKey: "dashboard", icon: LayoutDashboardIcon, href: "/admin" },
     { labelKey: "categories", icon: FolderTreeIcon, href: "/admin/categories" },
     { labelKey: "attributes", icon: TagIcon, href: "/admin/attributes" },
-  ];
+  ]
 
   const disabledItems: Array<NavItem & { labelKey: NavLabelKey }> = [
     { labelKey: "users", icon: UsersIcon, href: "#" },
     { labelKey: "products", icon: PackageIcon, href: "#" },
     { labelKey: "settings", icon: SettingsIcon, href: "#" },
-  ];
+  ]
 
   return (
     <Sidebar>
@@ -53,14 +53,12 @@ export function AdminSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/admin">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
                   <GavelIcon className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left leading-tight">
                   <span className="truncate font-semibold">lots-go</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {t("adminLabel")}
-                  </span>
+                  <span className="text-muted-foreground truncate text-xs">{t("adminLabel")}</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -76,7 +74,7 @@ export function AdminSidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-      <div className="mx-2 h-px bg-sidebar-border" role="separator" aria-orientation="horizontal" />
+      <div className="bg-sidebar-border mx-2 h-px" role="separator" aria-orientation="horizontal" />
 
       <SidebarContent>
         <SidebarGroup>
@@ -97,7 +95,7 @@ export function AdminSidebar() {
                 <SidebarMenuItem key={item.labelKey}>
                   <SidebarMenuButton
                     disabled
-                    className="cursor-not-allowed text-muted-foreground opacity-50"
+                    className="text-muted-foreground cursor-not-allowed opacity-50"
                     aria-disabled="true"
                   >
                     <item.icon />
@@ -110,5 +108,5 @@ export function AdminSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  );
+  )
 }

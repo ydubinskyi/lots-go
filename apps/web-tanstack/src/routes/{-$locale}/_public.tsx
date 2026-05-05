@@ -1,18 +1,18 @@
-import { Outlet, createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { useTranslations } from "use-intl";
+import { Outlet, createFileRoute, useLoaderData } from "@tanstack/react-router"
+import { useTranslations } from "use-intl"
 
-import { SUPPORTED_LOCALES } from "@lots-go/i18n";
-import { Link } from "@lots-go/ui/link";
+import { SUPPORTED_LOCALES } from "@lots-go/i18n"
+import { Link } from "@lots-go/ui/link"
 
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { LocaleSwitcher } from "@/components/locale-switcher"
 
 export const Route = createFileRoute("/{-$locale}/_public")({
   component: PublicLayout,
-});
+})
 
 function PublicLayout() {
-  const { locale } = useLoaderData({ from: "/{-$locale}" });
-  const t = useTranslations("nav");
+  const { locale } = useLoaderData({ from: "/{-$locale}" })
+  const t = useTranslations("nav")
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -28,5 +28,5 @@ function PublicLayout() {
         <Outlet />
       </main>
     </div>
-  );
+  )
 }

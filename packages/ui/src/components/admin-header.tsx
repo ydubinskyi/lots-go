@@ -1,8 +1,8 @@
-import { Separator } from "@lots-go/ui/components/separator";
-import { SidebarTrigger } from "@lots-go/ui/components/sidebar";
+import { Separator } from "@lots-go/ui/components/separator"
+import { SidebarTrigger } from "@lots-go/ui/components/sidebar"
 
 interface AdminHeaderProps {
-  actions?: React.ReactNode;
+  actions?: React.ReactNode
 }
 
 export function AdminHeader({ actions }: AdminHeaderProps) {
@@ -12,5 +12,5 @@ export function AdminHeader({ actions }: AdminHeaderProps) {
       <Separator orientation="vertical" className="mr-2 h-full" />
       {actions ? <div className="ml-auto flex items-center gap-2">{actions}</div> : null}
     </header>
-  );
+  )
 }

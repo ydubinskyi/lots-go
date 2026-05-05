@@ -1,24 +1,24 @@
-import { ChevronRightIcon } from "lucide-react";
-import { useTranslations } from "use-intl";
+import { ChevronRightIcon } from "lucide-react"
+import { useTranslations } from "use-intl"
 
-import type { CategoryTreeItem } from "@lots-go/api-client";
-import { Badge } from "@lots-go/ui/components/badge";
+import type { CategoryTreeItem } from "@lots-go/api-client"
+import { Badge } from "@lots-go/ui/components/badge"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@lots-go/ui/components/collapsible";
-import { Link } from "@lots-go/ui/link";
+} from "@lots-go/ui/components/collapsible"
+import { Link } from "@lots-go/ui/link"
 
 interface CategoriesTreeProps {
-  items: CategoryTreeItem[];
+  items: CategoryTreeItem[]
 }
 
 export function CategoriesTree({ items }: CategoriesTreeProps) {
-  const t = useTranslations("admin.categories");
+  const t = useTranslations("admin.categories")
 
   if (items.length === 0) {
-    return <p className="text-muted-foreground py-6 text-center">{t("noCategories")}</p>;
+    return <p className="text-muted-foreground py-6 text-center">{t("noCategories")}</p>
   }
 
   return (
@@ -27,17 +27,17 @@ export function CategoriesTree({ items }: CategoriesTreeProps) {
         <TreeNode key={item.id} item={item} />
       ))}
     </ul>
-  );
+  )
 }
 
 function TreeNode({ item }: { item: CategoryTreeItem }) {
-  const t = useTranslations("admin.categories");
-  const hasChildren = item.children.length > 0;
+  const t = useTranslations("admin.categories")
+  const hasChildren = item.children.length > 0
 
   return (
     <li>
       <Collapsible>
-        <div className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-muted/50">
+        <div className="hover:bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2">
           {hasChildren ? (
             <CollapsibleTrigger asChild>
               <button type="button" className="flex items-center gap-1 focus:outline-none">
@@ -48,11 +48,14 @@ function TreeNode({ item }: { item: CategoryTreeItem }) {
             <span className="size-4" />
           )}
 
-          <Link href={`/admin/categories/${item.id}`} className="flex-1 font-medium hover:underline">
+          <Link
+            href={`/admin/categories/${item.id}`}
+            className="flex-1 font-medium hover:underline"
+          >
             {item.title}
           </Link>
 
-          <span className="font-mono text-xs text-muted-foreground">{item.full_slug}</span>
+          <span className="text-muted-foreground font-mono text-xs">{item.full_slug}</span>
 
           {hasChildren && (
             <Badge variant="secondary" className="text-xs">
@@ -63,7 +66,7 @@ function TreeNode({ item }: { item: CategoryTreeItem }) {
 
         {hasChildren && (
           <CollapsibleContent>
-            <ul className="ml-6 mt-1 space-y-1 border-l pl-3">
+            <ul className="mt-1 ml-6 space-y-1 border-l pl-3">
               {item.children.map((child) => (
                 <TreeNode key={child.id} item={child} />
               ))}
@@ -72,5 +75,5 @@ function TreeNode({ item }: { item: CategoryTreeItem }) {
         )}
       </Collapsible>
     </li>
-  );
+  )
 }

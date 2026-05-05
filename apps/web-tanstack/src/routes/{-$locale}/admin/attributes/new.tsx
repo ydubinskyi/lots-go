@@ -1,28 +1,28 @@
-import { createFileRoute, useLoaderData, useNavigate } from "@tanstack/react-router";
-import { useForm } from "@tanstack/react-form";
-import { useTranslations } from "use-intl";
+import { useForm } from "@tanstack/react-form"
+import { createFileRoute, useLoaderData, useNavigate } from "@tanstack/react-router"
+import { useTranslations } from "use-intl"
 
-import type { Locale } from "@lots-go/i18n";
-import { Button } from "@lots-go/ui/components/button";
-import { Input } from "@lots-go/ui/components/input";
-import { Label } from "@lots-go/ui/components/label";
-import { Link } from "@lots-go/ui/link";
+import type { Locale } from "@lots-go/i18n"
+import { Button } from "@lots-go/ui/components/button"
+import { Input } from "@lots-go/ui/components/input"
+import { Label } from "@lots-go/ui/components/label"
+import { Link } from "@lots-go/ui/link"
 
-import { TranslationsTabs } from "@/components/admin/translations-tabs";
-import { useCreateAttribute } from "@/lib/mutations";
-import { slugify } from "@/lib/slugify";
+import { TranslationsTabs } from "@/components/admin/translations-tabs"
+import { useCreateAttribute } from "@/lib/mutations"
+import { slugify } from "@/lib/slugify"
 
-const LOCALES: Locale[] = ["en", "pl", "uk"];
+const LOCALES: Locale[] = ["en", "pl", "uk"]
 
 export const Route = createFileRoute("/{-$locale}/admin/attributes/new")({
   component: NewAttributePage,
-});
+})
 
 function NewAttributePage() {
-  const { locale } = useLoaderData({ from: "/{-$locale}" });
-  const t = useTranslations("admin.attributeNew");
-  const navigate = useNavigate();
-  const createAttribute = useCreateAttribute(locale);
+  const { locale } = useLoaderData({ from: "/{-$locale}" })
+  const t = useTranslations("admin.attributeNew")
+  const navigate = useNavigate()
+  const createAttribute = useCreateAttribute(locale)
 
   const form = useForm({
     defaultValues: {
@@ -41,13 +41,13 @@ function NewAttributePage() {
           label: tr.label,
           slug: tr.slug,
         })),
-      });
+      })
       void navigate({
         to: "/{-$locale}/admin/attributes/$id",
         params: { id: result.id },
-      });
+      })
     },
-  });
+  })
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -60,9 +60,9 @@ function NewAttributePage() {
 
       <form
         onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          void form.handleSubmit();
+          e.preventDefault()
+          e.stopPropagation()
+          void form.handleSubmit()
         }}
         className="space-y-6"
       >
@@ -91,12 +91,12 @@ function NewAttributePage() {
                     <Input
                       value={field.state.value}
                       onChange={(e) => {
-                        const newLabel = e.target.value;
-                        field.handleChange(newLabel);
+                        const newLabel = e.target.value
+                        field.handleChange(newLabel)
                         form.setFieldValue(
                           `translations[${index}].slug` as "translations[0].slug",
                           slugify(newLabel, lc),
-                        );
+                        )
                       }}
                       placeholder={`Label in ${lc}`}
                     />
@@ -125,5 +125,5 @@ function NewAttributePage() {
         </Button>
       </form>
     </div>
-  );
+  )
 }

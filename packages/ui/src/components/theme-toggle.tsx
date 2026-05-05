@@ -1,18 +1,18 @@
-import { MoonIcon, SunIcon } from "lucide-react";
-import { useTranslations } from "use-intl";
+import { MoonIcon, SunIcon } from "lucide-react"
+import { useTranslations } from "use-intl"
 
-import { Button } from "@lots-go/ui/components/button";
+import { Button } from "@lots-go/ui/components/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@lots-go/ui/components/dropdown-menu";
-import { useTheme } from "@lots-go/ui/components/theme-provider";
+} from "@lots-go/ui/components/dropdown-menu"
+import { useTheme } from "@lots-go/ui/components/theme-provider"
 
 export function ThemeToggle() {
-  const { setTheme } = useTheme();
-  const t = useTranslations("theme");
+  const { setTheme } = useTheme()
+  const t = useTranslations("theme")
 
   return (
     <DropdownMenu>
@@ -24,16 +24,10 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          {t("light")}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          {t("dark")}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          {t("system")}
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("light")}>{t("light")}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>{t("dark")}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>{t("system")}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

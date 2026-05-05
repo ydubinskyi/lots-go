@@ -59,7 +59,8 @@ const uk = {
       title: "Категорії",
       newCategory: "Нова категорія",
       noCategories: "Категорій ще немає",
-      childCount: "{count, plural, one {# підкатегорія} few {# підкатегорії} many {# підкатегорій} other {# підкатегорій}}",
+      childCount:
+        "{count, plural, one {# підкатегорія} few {# підкатегорії} many {# підкатегорій} other {# підкатегорій}}",
     },
     categoryNew: {
       title: "Нова категорія",
@@ -131,6 +132,6 @@ const uk = {
       slug: "Слаг",
     },
   },
-} as const;
+} as const
 
-export default uk;
+export default uk

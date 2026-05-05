@@ -1,9 +1,10 @@
-import * as React from "react";
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { useTranslations } from "use-intl";
+import * as React from "react"
 
-import type { CategoryTreeItem } from "@lots-go/api-client";
-import { Button } from "@lots-go/ui/components/button";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react"
+import { useTranslations } from "use-intl"
+
+import type { CategoryTreeItem } from "@lots-go/api-client"
+import { Button } from "@lots-go/ui/components/button"
 import {
   Command,
   CommandEmpty,
@@ -11,47 +12,36 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@lots-go/ui/components/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@lots-go/ui/components/popover";
-import { cn } from "@lots-go/ui/lib/utils";
+} from "@lots-go/ui/components/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@lots-go/ui/components/popover"
+import { cn } from "@lots-go/ui/lib/utils"
 
 interface ParentCategoryComboboxProps {
-  value: string | null;
-  onChange: (value: string | null) => void;
-  items: CategoryTreeItem[];
+  value: string | null
+  onChange: (value: string | null) => void
+  items: CategoryTreeItem[]
 }
 
 function flattenCategories(
   items: CategoryTreeItem[],
 ): { id: string; label: string; depth: number }[] {
-  const result: { id: string; label: string; depth: number }[] = [];
+  const result: { id: string; label: string; depth: number }[] = []
   for (const item of items) {
-    result.push({ id: item.id, label: item.full_slug, depth: item.depth });
+    result.push({ id: item.id, label: item.full_slug, depth: item.depth })
     for (const child of item.children) {
-      result.push({ id: child.id, label: child.full_slug, depth: child.depth });
+      result.push({ id: child.id, label: child.full_slug, depth: child.depth })
     }
   }
-  return result;
+  return result
 }
 
-export function ParentCategoryCombobox({
-  value,
-  onChange,
-  items,
-}: ParentCategoryComboboxProps) {
-  const t = useTranslations("admin.categoryNew");
-  const [open, setOpen] = React.useState(false);
+export function ParentCategoryCombobox({ value, onChange, items }: ParentCategoryComboboxProps) {
+  const t = useTranslations("admin.categoryNew")
+  const [open, setOpen] = React.useState(false)
 
-  const flat = React.useMemo(
-    () => flattenCategories(items).filter((c) => c.depth < 2),
-    [items],
-  );
+  const flat = React.useMemo(() => flattenCategories(items).filter((c) => c.depth < 2), [items])
 
-  const selected = flat.find((c) => c.id === value);
+  const selected = flat.find((c) => c.id === value)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -75,8 +65,8 @@ export function ParentCategoryCombobox({
               <CommandItem
                 value="__none__"
                 onSelect={() => {
-                  onChange(null);
-                  setOpen(false);
+                  onChange(null)
+                  setOpen(false)
                 }}
               >
                 <CheckIcon
@@ -89,15 +79,12 @@ export function ParentCategoryCombobox({
                   key={cat.id}
                   value={cat.id}
                   onSelect={() => {
-                    onChange(cat.id);
-                    setOpen(false);
+                    onChange(cat.id)
+                    setOpen(false)
                   }}
                 >
                   <CheckIcon
-                    className={cn(
-                      "mr-2 size-4",
-                      value === cat.id ? "opacity-100" : "opacity-0",
-                    )}
+                    className={cn("mr-2 size-4", value === cat.id ? "opacity-100" : "opacity-0")}
                   />
                   {cat.label}
                 </CommandItem>
@@ -107,5 +94,5 @@ export function ParentCategoryCombobox({
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

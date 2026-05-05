@@ -59,7 +59,8 @@ const pl = {
       title: "Kategorie",
       newCategory: "Nowa kategoria",
       noCategories: "Brak kategorii",
-      childCount: "{count, plural, one {# podkategoria} few {# podkategorie} many {# podkategorii} other {# podkategorii}}",
+      childCount:
+        "{count, plural, one {# podkategoria} few {# podkategorie} many {# podkategorii} other {# podkategorii}}",
     },
     categoryNew: {
       title: "Nowa kategoria",
@@ -131,6 +132,6 @@ const pl = {
       slug: "Slug",
     },
   },
-} as const;
+} as const
 
-export default pl;
+export default pl

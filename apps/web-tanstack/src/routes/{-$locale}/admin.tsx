@@ -1,19 +1,19 @@
-import { Outlet, createFileRoute, useLoaderData } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useLoaderData } from "@tanstack/react-router"
 
-import { SUPPORTED_LOCALES } from "@lots-go/i18n";
-import { AdminHeader } from "@lots-go/ui/components/admin-header";
-import { AdminSidebar } from "@lots-go/ui/components/admin-sidebar";
-import { ThemeToggle } from "@lots-go/ui/components/theme-toggle";
-import { SidebarInset, SidebarProvider } from "@lots-go/ui/components/sidebar";
+import { SUPPORTED_LOCALES } from "@lots-go/i18n"
+import { AdminHeader } from "@lots-go/ui/components/admin-header"
+import { AdminSidebar } from "@lots-go/ui/components/admin-sidebar"
+import { SidebarInset, SidebarProvider } from "@lots-go/ui/components/sidebar"
+import { ThemeToggle } from "@lots-go/ui/components/theme-toggle"
 
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { LocaleSwitcher } from "@/components/locale-switcher"
 
 export const Route = createFileRoute("/{-$locale}/admin")({
   component: AdminLayout,
-});
+})
 
 function AdminLayout() {
-  const { locale } = useLoaderData({ from: "/{-$locale}" });
+  const { locale } = useLoaderData({ from: "/{-$locale}" })
 
   return (
     <SidebarProvider>
@@ -32,5 +32,5 @@ function AdminLayout() {
         </main>
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { ApiError, ApiNetworkError } from "./errors.ts";
+import { ApiError, ApiNetworkError } from "./errors.ts"
 
 import type {
   AttachAttributeInput,
@@ -14,96 +14,96 @@ import type {
   Locale,
   PaginatedList,
   UUID,
-} from "./types.ts";
+} from "./types.ts"
 
-type FetchLike = typeof fetch;
+type FetchLike = typeof fetch
 
 export interface ApiClientConfig {
-  baseUrl: string;
-  getLocale?: () => Locale | undefined;
-  fetch?: FetchLike;
+  baseUrl: string
+  getLocale?: () => Locale | undefined
+  fetch?: FetchLike
 }
 
 interface RequestOptions {
-  locale?: Locale;
-  signal?: AbortSignal;
+  locale?: Locale
+  signal?: AbortSignal
 }
 
 interface ListAttributesParams {
-  page?: number;
-  pageSize?: number;
+  page?: number
+  pageSize?: number
 }
 
 export interface ApiClient {
-  getCategoryTree: (opts?: RequestOptions) => Promise<CategoriesTreeOutput>;
-  getCategoryById: (id: UUID, opts?: RequestOptions) => Promise<CategoryDetailsOutput>;
-  getCategoryAttributes: (id: UUID, opts?: RequestOptions) => Promise<CategoryAttributesOutput>;
+  getCategoryTree: (opts?: RequestOptions) => Promise<CategoriesTreeOutput>
+  getCategoryById: (id: UUID, opts?: RequestOptions) => Promise<CategoryDetailsOutput>
+  getCategoryAttributes: (id: UUID, opts?: RequestOptions) => Promise<CategoryAttributesOutput>
   createCategory: (
     input: CreateCategoryInput,
     opts?: RequestOptions,
-  ) => Promise<CreateCategoryOutput>;
+  ) => Promise<CreateCategoryOutput>
   attachAttribute: (
     categoryId: UUID,
     attributeId: UUID,
     input: AttachAttributeInput,
     opts?: RequestOptions,
-  ) => Promise<void>;
-  detachAttribute: (categoryId: UUID, attributeId: UUID, opts?: RequestOptions) => Promise<void>;
+  ) => Promise<void>
+  detachAttribute: (categoryId: UUID, attributeId: UUID, opts?: RequestOptions) => Promise<void>
   listAttributes: (
     params?: ListAttributesParams,
     opts?: RequestOptions,
-  ) => Promise<PaginatedList<AttributeListItemOutput>>;
-  getAttributeById: (id: UUID, opts?: RequestOptions) => Promise<AttributeDetailsOutput>;
+  ) => Promise<PaginatedList<AttributeListItemOutput>>
+  getAttributeById: (id: UUID, opts?: RequestOptions) => Promise<AttributeDetailsOutput>
   createAttribute: (
     input: CreateAttributeInput,
     opts?: RequestOptions,
-  ) => Promise<CreateAttributeOutput>;
-  getCurrentUser: () => Promise<null>;
+  ) => Promise<CreateAttributeOutput>
+  getCurrentUser: () => Promise<null>
 }
 
 export function createApiClient(cfg: ApiClientConfig): ApiClient {
-  const f: FetchLike = cfg.fetch ?? fetch;
-  const base = cfg.baseUrl.replace(/\/+$/, "");
+  const f: FetchLike = cfg.fetch ?? fetch
+  const base = cfg.baseUrl.replace(/\/+$/, "")
 
   async function request<T>(
     path: string,
     init: RequestInit & { locale?: Locale } = {},
   ): Promise<T> {
-    const locale = init.locale ?? cfg.getLocale?.() ?? "en";
-    const headers = new Headers(init.headers);
-    headers.set("Accept", "application/json");
-    headers.set("X-Locale", locale);
+    const locale = init.locale ?? cfg.getLocale?.() ?? "en"
+    const headers = new Headers(init.headers)
+    headers.set("Accept", "application/json")
+    headers.set("X-Locale", locale)
     if (init.body && !headers.has("Content-Type")) {
-      headers.set("Content-Type", "application/json");
+      headers.set("Content-Type", "application/json")
     }
 
-    let res: Response;
+    let res: Response
     try {
-      res = await f(`${base}${path}`, { ...init, headers });
+      res = await f(`${base}${path}`, { ...init, headers })
     } catch (cause) {
-      throw new ApiNetworkError(cause);
+      throw new ApiNetworkError(cause)
     }
 
     if (!res.ok) {
       const body = (await res.json().catch(() => ({ status: res.statusText }))) as {
-        status?: string;
-        error?: string;
-      };
+        status?: string
+        error?: string
+      }
       throw new ApiError(res.status, {
         status: body.status ?? res.statusText,
         error: body.error,
-      });
+      })
     }
 
-    if (res.status === 204) return undefined as T;
-    return (await res.json()) as T;
+    if (res.status === 204) return undefined as T
+    return (await res.json()) as T
   }
 
   function qs(params: Record<string, string | number | undefined>): string {
-    const entries = Object.entries(params).filter(([, v]) => v !== undefined);
-    if (entries.length === 0) return "";
-    const sp = new URLSearchParams(entries.map(([k, v]) => [k, String(v)]));
-    return `?${sp.toString()}`;
+    const entries = Object.entries(params).filter(([, v]) => v !== undefined)
+    if (entries.length === 0) return ""
+    const sp = new URLSearchParams(entries.map(([k, v]) => [k, String(v)]))
+    return `?${sp.toString()}`
   }
 
   return {
@@ -169,5 +169,5 @@ export function createApiClient(cfg: ApiClientConfig): ApiClient {
       }),
 
     getCurrentUser: () => Promise.resolve(null),
-  };
+  }
 }

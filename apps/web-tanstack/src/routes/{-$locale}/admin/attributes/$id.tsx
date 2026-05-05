@@ -1,28 +1,28 @@
-import { createFileRoute, useLoaderData, useParams } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "use-intl";
+import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, useLoaderData, useParams } from "@tanstack/react-router"
+import { useTranslations } from "use-intl"
 
-import type { AttributeDetailsOutput } from "@lots-go/api-client";
-import { isValidLocale, DEFAULT_LOCALE } from "@lots-go/i18n";
+import type { AttributeDetailsOutput } from "@lots-go/api-client"
+import { isValidLocale, DEFAULT_LOCALE } from "@lots-go/i18n"
 
-import { attributeDetailQuery } from "@/lib/queries";
+import { attributeDetailQuery } from "@/lib/queries"
 
 export const Route = createFileRoute("/{-$locale}/admin/attributes/$id")({
   loader: async ({ params, context }) => {
-    const locale = isValidLocale(params.locale) ? params.locale : DEFAULT_LOCALE;
-    await context.queryClient.ensureQueryData(attributeDetailQuery(params.id, locale));
+    const locale = isValidLocale(params.locale) ? params.locale : DEFAULT_LOCALE
+    await context.queryClient.ensureQueryData(attributeDetailQuery(params.id, locale))
   },
   component: AttributeDetailPage,
-});
+})
 
 function AttributeDetailPage() {
-  const { locale } = useLoaderData({ from: "/{-$locale}" });
-  const { id } = useParams({ from: "/{-$locale}/admin/attributes/$id" });
-  const t = useTranslations("admin.attributeDetail");
+  const { locale } = useLoaderData({ from: "/{-$locale}" })
+  const { id } = useParams({ from: "/{-$locale}/admin/attributes/$id" })
+  const t = useTranslations("admin.attributeDetail")
 
-  const { data: attribute } = useQuery<AttributeDetailsOutput>(attributeDetailQuery(id, locale));
+  const { data: attribute } = useQuery<AttributeDetailsOutput>(attributeDetailQuery(id, locale))
 
-  if (!attribute) return null;
+  if (!attribute) return null
 
   return (
     <div className="space-y-8">
@@ -30,9 +30,9 @@ function AttributeDetailPage() {
 
       <section className="space-y-2">
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-          <dt className="font-medium text-muted-foreground">{t("id")}</dt>
+          <dt className="text-muted-foreground font-medium">{t("id")}</dt>
           <dd className="font-mono">{attribute.id}</dd>
-          <dt className="font-medium text-muted-foreground">{t("code")}</dt>
+          <dt className="text-muted-foreground font-medium">{t("code")}</dt>
           <dd className="font-mono">{attribute.code}</dd>
         </dl>
       </section>
@@ -52,12 +52,12 @@ function AttributeDetailPage() {
               <tr key={tr.id} className="border-b last:border-0">
                 <td className="py-2 font-mono uppercase">{tr.language_code}</td>
                 <td className="py-2">{tr.label}</td>
-                <td className="py-2 font-mono text-xs text-muted-foreground">{tr.slug}</td>
+                <td className="text-muted-foreground py-2 font-mono text-xs">{tr.slug}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </section>
     </div>
-  );
+  )
 }

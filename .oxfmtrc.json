@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
   "sortImports": {
     "customGroups": [
       {
@@ -24,5 +25,5 @@
     ]
   },
   "sortPackageJson": true,
-  "sortTailwindcss": true,
+  "sortTailwindcss": true
 }

@@ -1,10 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@lots-go/ui/components/tabs";
-
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@lots-go/i18n";
-import type { Locale } from "@lots-go/i18n";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@lots-go/i18n"
+import type { Locale } from "@lots-go/i18n"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@lots-go/ui/components/tabs"
 
 interface TranslationsTabsProps {
-  renderTab: (locale: Locale, index: number) => React.ReactNode;
+  renderTab: (locale: Locale, index: number) => React.ReactNode
 }
 
 export function TranslationsTabs({ renderTab }: TranslationsTabsProps) {
@@ -23,5 +22,5 @@ export function TranslationsTabs({ renderTab }: TranslationsTabsProps) {
         </TabsContent>
       ))}
     </Tabs>
-  );
+  )
 }

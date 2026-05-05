@@ -1,6 +1,6 @@
-import type en from "./messages/en.ts";
+import type en from "./messages/en.ts"
 
-export type Messages = typeof en;
+export type Messages = typeof en
 
 declare global {
   // use-intl reads this augmentation to type-check translation keys.

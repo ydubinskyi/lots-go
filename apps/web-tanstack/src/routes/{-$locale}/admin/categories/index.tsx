@@ -1,28 +1,28 @@
-import { createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "use-intl";
+import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, useLoaderData } from "@tanstack/react-router"
+import { useTranslations } from "use-intl"
 
-import type { CategoriesTreeOutput } from "@lots-go/api-client";
-import { isValidLocale, DEFAULT_LOCALE } from "@lots-go/i18n";
-import { Button } from "@lots-go/ui/components/button";
-import { Link } from "@lots-go/ui/link";
+import type { CategoriesTreeOutput } from "@lots-go/api-client"
+import { isValidLocale, DEFAULT_LOCALE } from "@lots-go/i18n"
+import { Button } from "@lots-go/ui/components/button"
+import { Link } from "@lots-go/ui/link"
 
-import { CategoriesTree } from "@/components/admin/categories-tree";
-import { categoriesTreeQuery } from "@/lib/queries";
+import { CategoriesTree } from "@/components/admin/categories-tree"
+import { categoriesTreeQuery } from "@/lib/queries"
 
 export const Route = createFileRoute("/{-$locale}/admin/categories/")({
   loader: async ({ params, context }) => {
-    const locale = isValidLocale(params.locale) ? params.locale : DEFAULT_LOCALE;
-    await context.queryClient.ensureQueryData(categoriesTreeQuery(locale));
+    const locale = isValidLocale(params.locale) ? params.locale : DEFAULT_LOCALE
+    await context.queryClient.ensureQueryData(categoriesTreeQuery(locale))
   },
   component: CategoriesPage,
-});
+})
 
 function CategoriesPage() {
-  const { locale } = useLoaderData({ from: "/{-$locale}" });
-  const t = useTranslations("admin.categories");
+  const { locale } = useLoaderData({ from: "/{-$locale}" })
+  const t = useTranslations("admin.categories")
 
-  const { data } = useQuery<CategoriesTreeOutput>(categoriesTreeQuery(locale));
+  const { data } = useQuery<CategoriesTreeOutput>(categoriesTreeQuery(locale))
 
   return (
     <div className="space-y-6">
@@ -35,5 +35,5 @@ function CategoriesPage() {
 
       <CategoriesTree items={data?.items ?? []} />
     </div>
-  );
+  )
 }

@@ -130,6 +130,6 @@ const en = {
       slug: "Slug",
     },
   },
-} as const;
+} as const
 
-export default en;
+export default en

@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { useTranslations } from "use-intl";
+import { createFileRoute } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
+import { useTranslations } from "use-intl"
 
 import {
   Card,
@@ -8,24 +8,24 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@lots-go/ui/components/card";
-import { Link } from "@lots-go/ui/link";
+} from "@lots-go/ui/components/card"
+import { Link } from "@lots-go/ui/link"
 
-import { apiClient } from "@/lib/api";
+import { apiClient } from "@/lib/api"
 
 const getCategoriesTree = createServerFn({ method: "GET" }).handler(async () => {
-  const tree = await apiClient.getCategoryTree();
-  return { tree };
-});
+  const tree = await apiClient.getCategoryTree()
+  return { tree }
+})
 
 export const Route = createFileRoute("/{-$locale}/_public/")({
   loader: () => getCategoriesTree(),
   component: HomePage,
-});
+})
 
 function HomePage() {
-  const { tree } = Route.useLoaderData();
-  const t = useTranslations();
+  const { tree } = Route.useLoaderData()
+  const t = useTranslations()
 
   return (
     <section className="container mx-auto p-6">
@@ -63,5 +63,5 @@ function HomePage() {
         </ul>
       )}
     </section>
-  );
+  )
 }

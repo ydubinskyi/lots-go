@@ -103,6 +103,22 @@ export interface AttachAttributeInput {
   is_required: boolean;
 }
 
+export interface CreateAttributeTranslationInput {
+  language_code: string;
+  label: string;
+  slug: string;
+}
+
+export interface CreateAttributeInput {
+  code: string;
+  translations: CreateAttributeTranslationInput[];
+}
+
+export interface CreateAttributeOutput {
+  id: UUID;
+  code: string;
+}
+
 export interface ApiErrorBody {
   status: string;
   error?: string;

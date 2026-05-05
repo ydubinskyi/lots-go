@@ -7,6 +7,8 @@ import type {
   CategoriesTreeOutput,
   CategoryAttributesOutput,
   CategoryDetailsOutput,
+  CreateAttributeInput,
+  CreateAttributeOutput,
   CreateCategoryInput,
   CreateCategoryOutput,
   Locale,
@@ -52,6 +54,10 @@ export interface ApiClient {
     opts?: RequestOptions,
   ) => Promise<PaginatedList<AttributeListItemOutput>>;
   getAttributeById: (id: UUID, opts?: RequestOptions) => Promise<AttributeDetailsOutput>;
+  createAttribute: (
+    input: CreateAttributeInput,
+    opts?: RequestOptions,
+  ) => Promise<CreateAttributeOutput>;
   getCurrentUser: () => Promise<null>;
 }
 
@@ -150,6 +156,14 @@ export function createApiClient(cfg: ApiClientConfig): ApiClient {
 
     getAttributeById: (id, opts) =>
       request<AttributeDetailsOutput>(`/attributes/${id}`, {
+        signal: opts?.signal,
+        locale: opts?.locale,
+      }),
+
+    createAttribute: (input, opts) =>
+      request<CreateAttributeOutput>("/attributes", {
+        method: "POST",
+        body: JSON.stringify(input),
         signal: opts?.signal,
         locale: opts?.locale,
       }),

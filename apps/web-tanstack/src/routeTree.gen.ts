@@ -10,38 +10,154 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteImport } from './routes/{-$locale}'
-import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
+import { Route as Char123LocaleChar125AdminRouteImport } from './routes/{-$locale}/admin'
+import { Route as Char123LocaleChar125PublicRouteImport } from './routes/{-$locale}/_public'
+import { Route as Char123LocaleChar125AdminIndexRouteImport } from './routes/{-$locale}/admin/index'
+import { Route as Char123LocaleChar125PublicIndexRouteImport } from './routes/{-$locale}/_public.index'
+import { Route as Char123LocaleChar125AdminCategoriesIndexRouteImport } from './routes/{-$locale}/admin/categories/index'
+import { Route as Char123LocaleChar125AdminAttributesIndexRouteImport } from './routes/{-$locale}/admin/attributes/index'
+import { Route as Char123LocaleChar125AdminCategoriesNewRouteImport } from './routes/{-$locale}/admin/categories/new'
+import { Route as Char123LocaleChar125AdminCategoriesIdRouteImport } from './routes/{-$locale}/admin/categories/$id'
+import { Route as Char123LocaleChar125AdminAttributesNewRouteImport } from './routes/{-$locale}/admin/attributes/new'
+import { Route as Char123LocaleChar125AdminAttributesIdRouteImport } from './routes/{-$locale}/admin/attributes/$id'
 
 const Char123LocaleChar125Route = Char123LocaleChar125RouteImport.update({
   id: '/{-$locale}',
   path: '/{-$locale}',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Char123LocaleChar125IndexRoute =
-  Char123LocaleChar125IndexRouteImport.update({
+const Char123LocaleChar125AdminRoute =
+  Char123LocaleChar125AdminRouteImport.update({
+    id: '/admin',
+    path: '/admin',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125PublicRoute =
+  Char123LocaleChar125PublicRouteImport.update({
+    id: '/_public',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125AdminIndexRoute =
+  Char123LocaleChar125AdminIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => Char123LocaleChar125Route,
+    getParentRoute: () => Char123LocaleChar125AdminRoute,
+  } as any)
+const Char123LocaleChar125PublicIndexRoute =
+  Char123LocaleChar125PublicIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125PublicRoute,
+  } as any)
+const Char123LocaleChar125AdminCategoriesIndexRoute =
+  Char123LocaleChar125AdminCategoriesIndexRouteImport.update({
+    id: '/categories/',
+    path: '/categories/',
+    getParentRoute: () => Char123LocaleChar125AdminRoute,
+  } as any)
+const Char123LocaleChar125AdminAttributesIndexRoute =
+  Char123LocaleChar125AdminAttributesIndexRouteImport.update({
+    id: '/attributes/',
+    path: '/attributes/',
+    getParentRoute: () => Char123LocaleChar125AdminRoute,
+  } as any)
+const Char123LocaleChar125AdminCategoriesNewRoute =
+  Char123LocaleChar125AdminCategoriesNewRouteImport.update({
+    id: '/categories/new',
+    path: '/categories/new',
+    getParentRoute: () => Char123LocaleChar125AdminRoute,
+  } as any)
+const Char123LocaleChar125AdminCategoriesIdRoute =
+  Char123LocaleChar125AdminCategoriesIdRouteImport.update({
+    id: '/categories/$id',
+    path: '/categories/$id',
+    getParentRoute: () => Char123LocaleChar125AdminRoute,
+  } as any)
+const Char123LocaleChar125AdminAttributesNewRoute =
+  Char123LocaleChar125AdminAttributesNewRouteImport.update({
+    id: '/attributes/new',
+    path: '/attributes/new',
+    getParentRoute: () => Char123LocaleChar125AdminRoute,
+  } as any)
+const Char123LocaleChar125AdminAttributesIdRoute =
+  Char123LocaleChar125AdminAttributesIdRouteImport.update({
+    id: '/attributes/$id',
+    path: '/attributes/$id',
+    getParentRoute: () => Char123LocaleChar125AdminRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
-  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}': typeof Char123LocaleChar125PublicRouteWithChildren
+  '/{-$locale}/admin': typeof Char123LocaleChar125AdminRouteWithChildren
+  '/{-$locale}/': typeof Char123LocaleChar125PublicIndexRoute
+  '/{-$locale}/admin/': typeof Char123LocaleChar125AdminIndexRoute
+  '/{-$locale}/admin/attributes/$id': typeof Char123LocaleChar125AdminAttributesIdRoute
+  '/{-$locale}/admin/attributes/new': typeof Char123LocaleChar125AdminAttributesNewRoute
+  '/{-$locale}/admin/categories/$id': typeof Char123LocaleChar125AdminCategoriesIdRoute
+  '/{-$locale}/admin/categories/new': typeof Char123LocaleChar125AdminCategoriesNewRoute
+  '/{-$locale}/admin/attributes/': typeof Char123LocaleChar125AdminAttributesIndexRoute
+  '/{-$locale}/admin/categories/': typeof Char123LocaleChar125AdminCategoriesIndexRoute
 }
 export interface FileRoutesByTo {
-  '/{-$locale}': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}': typeof Char123LocaleChar125PublicIndexRoute
+  '/{-$locale}/admin': typeof Char123LocaleChar125AdminIndexRoute
+  '/{-$locale}/admin/attributes/$id': typeof Char123LocaleChar125AdminAttributesIdRoute
+  '/{-$locale}/admin/attributes/new': typeof Char123LocaleChar125AdminAttributesNewRoute
+  '/{-$locale}/admin/categories/$id': typeof Char123LocaleChar125AdminCategoriesIdRoute
+  '/{-$locale}/admin/categories/new': typeof Char123LocaleChar125AdminCategoriesNewRoute
+  '/{-$locale}/admin/attributes': typeof Char123LocaleChar125AdminAttributesIndexRoute
+  '/{-$locale}/admin/categories': typeof Char123LocaleChar125AdminCategoriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
-  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
+  '/{-$locale}/_public': typeof Char123LocaleChar125PublicRouteWithChildren
+  '/{-$locale}/admin': typeof Char123LocaleChar125AdminRouteWithChildren
+  '/{-$locale}/_public/': typeof Char123LocaleChar125PublicIndexRoute
+  '/{-$locale}/admin/': typeof Char123LocaleChar125AdminIndexRoute
+  '/{-$locale}/admin/attributes/$id': typeof Char123LocaleChar125AdminAttributesIdRoute
+  '/{-$locale}/admin/attributes/new': typeof Char123LocaleChar125AdminAttributesNewRoute
+  '/{-$locale}/admin/categories/$id': typeof Char123LocaleChar125AdminCategoriesIdRoute
+  '/{-$locale}/admin/categories/new': typeof Char123LocaleChar125AdminCategoriesNewRoute
+  '/{-$locale}/admin/attributes/': typeof Char123LocaleChar125AdminAttributesIndexRoute
+  '/{-$locale}/admin/categories/': typeof Char123LocaleChar125AdminCategoriesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/{-$locale}' | '/{-$locale}/'
+  fullPaths:
+    | '/{-$locale}'
+    | '/{-$locale}/admin'
+    | '/{-$locale}/'
+    | '/{-$locale}/admin/'
+    | '/{-$locale}/admin/attributes/$id'
+    | '/{-$locale}/admin/attributes/new'
+    | '/{-$locale}/admin/categories/$id'
+    | '/{-$locale}/admin/categories/new'
+    | '/{-$locale}/admin/attributes/'
+    | '/{-$locale}/admin/categories/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/{-$locale}'
-  id: '__root__' | '/{-$locale}' | '/{-$locale}/'
+  to:
+    | '/{-$locale}'
+    | '/{-$locale}/admin'
+    | '/{-$locale}/admin/attributes/$id'
+    | '/{-$locale}/admin/attributes/new'
+    | '/{-$locale}/admin/categories/$id'
+    | '/{-$locale}/admin/categories/new'
+    | '/{-$locale}/admin/attributes'
+    | '/{-$locale}/admin/categories'
+  id:
+    | '__root__'
+    | '/{-$locale}'
+    | '/{-$locale}/_public'
+    | '/{-$locale}/admin'
+    | '/{-$locale}/_public/'
+    | '/{-$locale}/admin/'
+    | '/{-$locale}/admin/attributes/$id'
+    | '/{-$locale}/admin/attributes/new'
+    | '/{-$locale}/admin/categories/$id'
+    | '/{-$locale}/admin/categories/new'
+    | '/{-$locale}/admin/attributes/'
+    | '/{-$locale}/admin/categories/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -57,22 +173,133 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$locale}/': {
-      id: '/{-$locale}/'
+    '/{-$locale}/admin': {
+      id: '/{-$locale}/admin'
+      path: '/admin'
+      fullPath: '/{-$locale}/admin'
+      preLoaderRoute: typeof Char123LocaleChar125AdminRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/_public': {
+      id: '/{-$locale}/_public'
+      path: ''
+      fullPath: '/{-$locale}'
+      preLoaderRoute: typeof Char123LocaleChar125PublicRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/admin/': {
+      id: '/{-$locale}/admin/'
+      path: '/'
+      fullPath: '/{-$locale}/admin/'
+      preLoaderRoute: typeof Char123LocaleChar125AdminIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125AdminRoute
+    }
+    '/{-$locale}/_public/': {
+      id: '/{-$locale}/_public/'
       path: '/'
       fullPath: '/{-$locale}/'
-      preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
-      parentRoute: typeof Char123LocaleChar125Route
+      preLoaderRoute: typeof Char123LocaleChar125PublicIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRoute
+    }
+    '/{-$locale}/admin/categories/': {
+      id: '/{-$locale}/admin/categories/'
+      path: '/categories'
+      fullPath: '/{-$locale}/admin/categories/'
+      preLoaderRoute: typeof Char123LocaleChar125AdminCategoriesIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125AdminRoute
+    }
+    '/{-$locale}/admin/attributes/': {
+      id: '/{-$locale}/admin/attributes/'
+      path: '/attributes'
+      fullPath: '/{-$locale}/admin/attributes/'
+      preLoaderRoute: typeof Char123LocaleChar125AdminAttributesIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125AdminRoute
+    }
+    '/{-$locale}/admin/categories/new': {
+      id: '/{-$locale}/admin/categories/new'
+      path: '/categories/new'
+      fullPath: '/{-$locale}/admin/categories/new'
+      preLoaderRoute: typeof Char123LocaleChar125AdminCategoriesNewRouteImport
+      parentRoute: typeof Char123LocaleChar125AdminRoute
+    }
+    '/{-$locale}/admin/categories/$id': {
+      id: '/{-$locale}/admin/categories/$id'
+      path: '/categories/$id'
+      fullPath: '/{-$locale}/admin/categories/$id'
+      preLoaderRoute: typeof Char123LocaleChar125AdminCategoriesIdRouteImport
+      parentRoute: typeof Char123LocaleChar125AdminRoute
+    }
+    '/{-$locale}/admin/attributes/new': {
+      id: '/{-$locale}/admin/attributes/new'
+      path: '/attributes/new'
+      fullPath: '/{-$locale}/admin/attributes/new'
+      preLoaderRoute: typeof Char123LocaleChar125AdminAttributesNewRouteImport
+      parentRoute: typeof Char123LocaleChar125AdminRoute
+    }
+    '/{-$locale}/admin/attributes/$id': {
+      id: '/{-$locale}/admin/attributes/$id'
+      path: '/attributes/$id'
+      fullPath: '/{-$locale}/admin/attributes/$id'
+      preLoaderRoute: typeof Char123LocaleChar125AdminAttributesIdRouteImport
+      parentRoute: typeof Char123LocaleChar125AdminRoute
     }
   }
 }
 
+interface Char123LocaleChar125PublicRouteChildren {
+  Char123LocaleChar125PublicIndexRoute: typeof Char123LocaleChar125PublicIndexRoute
+}
+
+const Char123LocaleChar125PublicRouteChildren: Char123LocaleChar125PublicRouteChildren =
+  {
+    Char123LocaleChar125PublicIndexRoute: Char123LocaleChar125PublicIndexRoute,
+  }
+
+const Char123LocaleChar125PublicRouteWithChildren =
+  Char123LocaleChar125PublicRoute._addFileChildren(
+    Char123LocaleChar125PublicRouteChildren,
+  )
+
+interface Char123LocaleChar125AdminRouteChildren {
+  Char123LocaleChar125AdminIndexRoute: typeof Char123LocaleChar125AdminIndexRoute
+  Char123LocaleChar125AdminAttributesIdRoute: typeof Char123LocaleChar125AdminAttributesIdRoute
+  Char123LocaleChar125AdminAttributesNewRoute: typeof Char123LocaleChar125AdminAttributesNewRoute
+  Char123LocaleChar125AdminCategoriesIdRoute: typeof Char123LocaleChar125AdminCategoriesIdRoute
+  Char123LocaleChar125AdminCategoriesNewRoute: typeof Char123LocaleChar125AdminCategoriesNewRoute
+  Char123LocaleChar125AdminAttributesIndexRoute: typeof Char123LocaleChar125AdminAttributesIndexRoute
+  Char123LocaleChar125AdminCategoriesIndexRoute: typeof Char123LocaleChar125AdminCategoriesIndexRoute
+}
+
+const Char123LocaleChar125AdminRouteChildren: Char123LocaleChar125AdminRouteChildren =
+  {
+    Char123LocaleChar125AdminIndexRoute: Char123LocaleChar125AdminIndexRoute,
+    Char123LocaleChar125AdminAttributesIdRoute:
+      Char123LocaleChar125AdminAttributesIdRoute,
+    Char123LocaleChar125AdminAttributesNewRoute:
+      Char123LocaleChar125AdminAttributesNewRoute,
+    Char123LocaleChar125AdminCategoriesIdRoute:
+      Char123LocaleChar125AdminCategoriesIdRoute,
+    Char123LocaleChar125AdminCategoriesNewRoute:
+      Char123LocaleChar125AdminCategoriesNewRoute,
+    Char123LocaleChar125AdminAttributesIndexRoute:
+      Char123LocaleChar125AdminAttributesIndexRoute,
+    Char123LocaleChar125AdminCategoriesIndexRoute:
+      Char123LocaleChar125AdminCategoriesIndexRoute,
+  }
+
+const Char123LocaleChar125AdminRouteWithChildren =
+  Char123LocaleChar125AdminRoute._addFileChildren(
+    Char123LocaleChar125AdminRouteChildren,
+  )
+
 interface Char123LocaleChar125RouteChildren {
-  Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
+  Char123LocaleChar125PublicRoute: typeof Char123LocaleChar125PublicRouteWithChildren
+  Char123LocaleChar125AdminRoute: typeof Char123LocaleChar125AdminRouteWithChildren
 }
 
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
-  Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
+  Char123LocaleChar125PublicRoute: Char123LocaleChar125PublicRouteWithChildren,
+  Char123LocaleChar125AdminRoute: Char123LocaleChar125AdminRouteWithChildren,
 }
 
 const Char123LocaleChar125RouteWithChildren =

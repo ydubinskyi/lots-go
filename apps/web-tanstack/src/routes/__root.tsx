@@ -3,16 +3,26 @@ import {
   HeadContent,
   Outlet,
   Scripts,
-  createRootRoute,
+  createRootRouteWithContext,
   useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import type { QueryClient } from "@tanstack/react-query";
 
 import { DEFAULT_LOCALE } from "@lots-go/i18n";
 import type { Locale } from "@lots-go/i18n";
+import en from "@lots-go/i18n/messages/en";
+import { ErrorPage } from "@lots-go/ui/components/error-page";
+import { NotFound } from "@lots-go/ui/components/not-found";
+import { Toaster } from "@lots-go/ui/components/sonner";
+import { ThemeProvider } from "@lots-go/ui/components/theme-provider";
 import appCss from "@lots-go/ui/globals.css?url";
 
-export const Route = createRootRoute({
+interface RouterContext {
+  queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -22,14 +32,34 @@ export const Route = createRootRoute({
     links: [{ rel: "stylesheet", href: appCss }],
   }),
   notFoundComponent: () => (
-    <main className="container mx-auto p-4 pt-16">
-      <h1>404</h1>
-      <p>The requested page could not be found.</p>
-    </main>
+    <NotFound
+      title={en.errors.notFound.title}
+      description={en.errors.notFound.description}
+      homeLabel={en.errors.notFound.goHome}
+    />
+  ),
+  errorComponent: ({ error, reset }) => (
+    <ErrorPage
+      title={en.errors.serverError.title}
+      description={en.errors.serverError.description}
+      homeLabel={en.errors.serverError.goHome}
+      tryAgainLabel={en.errors.serverError.tryAgain}
+      onReset={reset}
+      errorMessage={error?.message}
+    />
   ),
   shellComponent: RootDocument,
-  component: () => <Outlet />,
+  component: RootComponent,
 });
+
+function RootComponent() {
+  return (
+    <ThemeProvider defaultTheme="system" storageKey="theme">
+      <Outlet />
+      <Toaster />
+    </ThemeProvider>
+  );
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const locale = useRouterState({
@@ -43,7 +73,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   });
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>

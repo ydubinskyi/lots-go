@@ -18,7 +18,7 @@ const getCategoriesTree = createServerFn({ method: "GET" }).handler(async () => 
   return { tree };
 });
 
-export const Route = createFileRoute("/{-$locale}/")({
+export const Route = createFileRoute("/{-$locale}/_public/")({
   loader: () => getCategoriesTree(),
   component: HomePage,
 });
